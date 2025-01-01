@@ -28,8 +28,7 @@ export class Vector {
     }
 
     clamp(length : number) {
-        const current = Math.sqrt(this.x * this.x + this.y * this.y);
-        
+        const current = this.length();
         if (current > length) {
             this.x = this.x / current * length;
             this.y = this.y / current * length;
@@ -48,5 +47,15 @@ export class Vector {
     scalar(factor : number) {
         this.x *= factor;
         this.y *= factor;
+    }
+
+    toLength(length : number) {
+        const current = this.length();
+        this.x = this.x / current * length;
+        this.y = this.y / current * length;
+    }
+
+    length() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 }

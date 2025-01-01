@@ -13,9 +13,10 @@ const lastName = "Kraus";
 			<h1>&nbsp;</h1>
 			{lastName.split("").map((char, i) => <h1 class="animated" style={`animation-delay: ${(firstName.length+i)*100}ms`}>{char}</h1>)}
 		</div>
-		<div id="orbitable" class="overlap bg-red-500 w-20 h-20 cursor-move">
+		<div id="orbitable" class="overlap bg-red-500 w-20 h-20 cursor-move top-2/4 left-2/4">
 			<p>Education</p>
 		</div>
+		
 	</section>
 	<section></section>
 	<section></section>
@@ -123,7 +124,7 @@ import { Vector } from "../code/vector";
 
 		constructor(inputElement : HTMLElement) {
 			this.offset = new Vector(0, 0);
-			this.speed = new Vector(0, 0);
+			this.speed = new Vector(10, 10);
 			this.anchor = new Vector(0, 0);
 
 			this.active = false;
@@ -131,12 +132,14 @@ import { Vector } from "../code/vector";
 
 			this.timestamp = null;
 			this.animationRequest = null;
+			this.element.style.transform = `translate(900px, 450px) perspective(500px)`;
 		}
 
 		pickup(clientX : number, clientY : number) {
 			const { top, left } = this.element.getBoundingClientRect();
-
+			
 			this.offset.set(clientX - left, clientY - top);
+			
 			this.speed.set(0, 0);
 			this.active = true;
 
@@ -150,16 +153,22 @@ import { Vector } from "../code/vector";
 
 		move(clientX : number, clientY : number) {
 			if (this.active) {
-				const { top, left } = this.element.getBoundingClientRect();
 				
+				const { top, left } = this.element.getBoundingClientRect();
+				const { top:pTop, left:pLeft, right:pRight, bottom:pBottom } = this.element.parentElement?.getBoundingClientRect() ?? this.element.getBoundingClientRect();
+				console.log(pRight - pLeft, pBottom - pTop);
 				const newPos = new Vector(clientX, clientY);
+				
 				newPos.subtract(this.offset);
+				const pCenter = new Vector((pLeft + pRight) / 2, (pBottom + pTop) / 2);
+				newPos.subtract(pCenter);
+				newPos.clamp(pCenter.y);
+				newPos.add(pCenter);
 
 				const newSpeed = new Vector(newPos.x - left, newPos.y - top);
 				this.speed.lerpXY(newSpeed.x, newSpeed.y, 0.9);
-				
-				this.element.style.top = `${newPos.y}px`;
-				this.element.style.left = `${newPos.x}px`;
+
+				this.element.style.transform = `translate(${newPos.x}px, ${newPos.y}px)`;
 			}
 		}
 
@@ -169,6 +178,7 @@ import { Vector } from "../code/vector";
 
 			const { top, left } = this.element.getBoundingClientRect();
 			this.anchor.set(left, top);
+			this.speed.clamp(100);
 
 			this.animationRequest = requestAnimationFrame(this.animateStep.bind(this));
 		}
@@ -178,22 +188,32 @@ import { Vector } from "../code/vector";
 				this.timestamp = timestamp;
 			}
 
-			const elapsed = timestamp - this.timestamp;
+			let elapsed = timestamp - this.timestamp;
 			
-			const a = 250;
-			if(!this.active && elapsed < a) {
-				const t = elapsed / a;
-				const dx = this.speed.x * 10 * t * (1 - t / 2);
-				const dy = this.speed.y * 10 * t * (1 - t / 2);
+			const a = 5000;
+			const b = 50;
+			const t = elapsed / 1000;
+			if(!this.active && this.speed.length() * b > a * t) {
+				
+				const ds = this.speed.length() * b * t - a * t * t / 2;
+				const dsV = this.speed.copy();
 
-				this.element.style.top = `${this.anchor.y + dy}px`;
-				this.element.style.left = `${this.anchor.x + dx}px`;
+				
+				dsV.toLength(ds);
+				console.log(this.speed.length());
+
+				this.element.style.transform = `translate(${this.anchor.x + dsV.x}px, ${this.anchor.y + dsV.y}px)`;
 
 				this.animationRequest = requestAnimationFrame(this.animateStep.bind(this));
 			}
 			else {
 				this.active = false;
 			}
+		}
+
+		clamp(x : number, y : number) {
+
+
 		}
 	}
 
