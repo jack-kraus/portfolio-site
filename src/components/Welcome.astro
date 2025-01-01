@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/fraunces';
+import { Vector } from '../code/vector';
 
 const firstName = "Jack";
 const lastName = "Kraus";
@@ -12,7 +13,9 @@ const lastName = "Kraus";
 			<h1>&nbsp;</h1>
 			{lastName.split("").map((char, i) => <h1 class="animated" style={`animation-delay: ${(firstName.length+i)*100}ms`}>{char}</h1>)}
 		</div>
-		<h1 class="overlap three text-center">hello</h1>
+		<div id="orbitable" class="overlap bg-red-500 w-20 h-20 cursor-move">
+			<p>Education</p>
+		</div>
 	</section>
 	<section></section>
 	<section></section>
@@ -25,11 +28,7 @@ const lastName = "Kraus";
 		height: 1000px;
 	}
 
-	.overlap {
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
+	
 
 	.intro {
 		display: flex;
@@ -64,18 +63,6 @@ const lastName = "Kraus";
 		}
 	}
 
-	@keyframes orbit {
-		0% {
-			transform: perspective(500px) translate3d(0px, 0px, 0px);
-		}
-		50% {
-			transform: perspective(500px) translate3d(0px, 50px, 50px);
-		}
-		100% {
-			transform: perspective(500px) translate3d(0px, 100px, 0px);
-		}
-	}
-
 	h1 {
 		font-size: 100px;
 		color: white;
@@ -87,7 +74,17 @@ const lastName = "Kraus";
 	}
 </style>
 
+<style is:global>
+	.overlap {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+</style>
+
 <script>
+import { Vector } from "../code/vector";
+
 	const snapItems = document.querySelectorAll('section');
 
 	window.addEventListener('scroll', () => {
@@ -106,4 +103,116 @@ const lastName = "Kraus";
 			}
 		});
 	});
+
+	/*
+		Needs:
+		- Current X and Y
+		- Offset of click from item corner
+		- Speed X and Y (update each move, and keep on release with friction)
+	*/
+	class Orbitable {
+		offset : Vector;
+		speed : Vector;
+		anchor : Vector;
+
+		active : boolean;
+		element : HTMLElement;
+
+		timestamp : DOMHighResTimeStamp | null;
+		animationRequest : number | null;
+
+		constructor(inputElement : HTMLElement) {
+			this.offset = new Vector(0, 0);
+			this.speed = new Vector(0, 0);
+			this.anchor = new Vector(0, 0);
+
+			this.active = false;
+			this.element = inputElement;
+
+			this.timestamp = null;
+			this.animationRequest = null;
+		}
+
+		pickup(clientX : number, clientY : number) {
+			const { top, left } = this.element.getBoundingClientRect();
+
+			this.offset.set(clientX - left, clientY - top);
+			this.speed.set(0, 0);
+			this.active = true;
+
+			if (this.animationRequest !== null) {
+				cancelAnimationFrame(this.animationRequest);
+			}
+
+			this.animationRequest = null;
+			this.timestamp = null;
+		}
+
+		move(clientX : number, clientY : number) {
+			if (this.active) {
+				const { top, left } = this.element.getBoundingClientRect();
+				
+				const newPos = new Vector(clientX, clientY);
+				newPos.subtract(this.offset);
+
+				const newSpeed = new Vector(newPos.x - left, newPos.y - top);
+				this.speed.lerpXY(newSpeed.x, newSpeed.y, 0.9);
+				
+				this.element.style.top = `${newPos.y}px`;
+				this.element.style.left = `${newPos.x}px`;
+			}
+		}
+
+		release() {
+			if (!this.active) return;
+			this.active = false;
+
+			const { top, left } = this.element.getBoundingClientRect();
+			this.anchor.set(left, top);
+
+			this.animationRequest = requestAnimationFrame(this.animateStep.bind(this));
+		}
+
+		animateStep(timestamp : DOMHighResTimeStamp) {
+			if (this.timestamp === null) {
+				this.timestamp = timestamp;
+			}
+
+			const elapsed = timestamp - this.timestamp;
+			
+			const a = 250;
+			if(!this.active && elapsed < a) {
+				const t = elapsed / a;
+				const dx = this.speed.x * 10 * t * (1 - t / 2);
+				const dy = this.speed.y * 10 * t * (1 - t / 2);
+
+				this.element.style.top = `${this.anchor.y + dy}px`;
+				this.element.style.left = `${this.anchor.x + dx}px`;
+
+				this.animationRequest = requestAnimationFrame(this.animateStep.bind(this));
+			}
+			else {
+				this.active = false;
+			}
+		}
+	}
+
+	const element = document.getElementById("orbitable");
+	if (element) {
+		const item = new Orbitable(element);
+		element?.addEventListener("mousedown", (e) => {
+			e.preventDefault();
+			item.pickup(e.clientX, e.clientY);
+		});
+		document.addEventListener("mousemove", (e)=> {
+			e.preventDefault();
+			item.move(e.clientX, e.clientY);
+		});
+		document.addEventListener("mouseup", (e) => {
+			e.preventDefault();
+			item.release();
+		});
+	}
+	
+
 </script>
