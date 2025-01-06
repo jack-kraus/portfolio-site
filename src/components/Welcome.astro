@@ -4,21 +4,50 @@ import { Vector } from '../code/vector';
 
 const firstName = "Jack";
 const lastName = "Kraus";
+
+const projects = [
+	{ title : "Leveler" },
+	{ title : "Harbor Currents" },
+	{ title : "Mini Golf" }
+];
 ---
 
 <main>
 	<section id="overview">
-		<div class="intro align-middle m-auto overlap">
-			{firstName.split("").map((char, i) => <h1 class="animated" style={{"animation-delay" : `${i*100}ms`}}>{char}</h1>)}
-			<h1>&nbsp;</h1>
-			{lastName.split("").map((char, i) => <h1 class="animated" style={`animation-delay: ${(firstName.length+i)*100}ms`}>{char}</h1>)}
+		<div class="intro align-middle  overlap">
+			<div class="max-w-full">
+				{firstName.split("").map((char, i) => <h1 class="animated shrink text-nowrap block" style={{"animation-delay" : `${i*100}ms`}}>{char}</h1>)}
+				<h1 class="text-nowrap block">&nbsp;</h1>
+				{lastName.split("").map((char, i) => <h1 class="animated shrink text-nowrap block" style={`animation-delay: ${(firstName.length+i)*100}ms`}>{char}</h1>)}
+			</div>
 		</div>
 		<div id="orbitable" class="overlap bg-red-500 w-20 h-20 cursor-move top-2/4 left-2/4">
 			<p>Education</p>
 		</div>
 		
 	</section>
-	<section></section>
+	<section id="projects">
+		<div class="w-full h-full bg-red-500">
+			<div class="h-2/3 w-full p-20 bg-blue-600 overflow-hidden">
+				<div class="bg-green-500 w-full h-full projects-grid max-w-7xl mx-auto overflow-hidden">
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+					<div class="bg-purple-600 rounded-lg"></div>
+				</div>
+			</div>
+		</div>
+	</section>
 	<section></section>
 	<section></section>
 </main>
@@ -38,6 +67,7 @@ const lastName = "Kraus";
 		height: 100%;
 		justify-content: center;
 		align-items: center;
+		max-width: 100vw;
 	}
 
 	section {
@@ -52,7 +82,7 @@ const lastName = "Kraus";
 
 	@keyframes fadein {
 		0% {
-			opacity: 0.01;
+			opacity: 0;
 			translate: 0px 10px;
 		}
 		75% {
@@ -66,6 +96,7 @@ const lastName = "Kraus";
 
 	h1 {
 		font-size: 100px;
+
 		color: white;
 		display: inline-block;
 		font-family: 'Fraunces Variable', serif;
@@ -73,6 +104,15 @@ const lastName = "Kraus";
 		
 		animation: fadein 600ms ease-in-out both;
 	}
+
+	.projects-grid {
+		display: grid;
+		gap: 20px;
+		grid-template-columns: auto auto auto;
+		overflow: hidden;
+	}
+
+	
 </style>
 
 <style is:global>
@@ -162,7 +202,7 @@ import { Vector } from "../code/vector";
 				newPos.subtract(this.offset);
 				const pCenter = new Vector((pLeft + pRight) / 2, (pBottom + pTop) / 2);
 				newPos.subtract(pCenter);
-				newPos.clamp(pCenter.y);
+				newPos.toLength(pCenter.y);
 				newPos.add(pCenter);
 
 				const newSpeed = new Vector(newPos.x - left, newPos.y - top);
