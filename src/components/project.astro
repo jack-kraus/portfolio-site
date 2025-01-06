@@ -1,0 +1,10 @@
+---
+const { name, photo, tags } = Astro.props;
+import { Image } from 'astro:assets';
+import svgReference from '../assets/leveler.png';
+---
+<div class="bg-black rounded-lg relative overflow-hidden group">
+    <img src={svgReference.src} class="w-full h-full object-fill hover:blur-sm transition-all duration-700 hover:brightness-50"/>
+    <h1 class="pl-3 pb-2 absolute left-0 bottom-0 text-white font-bold text-xl shadow-black drop-shadow-lg">{name}</h1>
+    <h2 class="absolute -bottom-5 group-hover:bottom-5 px-auto transition-all left-0 text-white">hello</h2>
+</div>
