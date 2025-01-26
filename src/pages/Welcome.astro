@@ -3,13 +3,17 @@ import '@fontsource-variable/fraunces';
 import { Vector } from '../code/vector';
 import Project from '../components/project.astro';
 
+import { Image } from 'astro:assets';
+import levelerImage from "../assets/leveler.png";
+
+
 const firstName = "Jack";
 const lastName = "Kraus";
 
 const projects = [
-	{ title : "Leveler", description: "a video game review site" },
-	{ title : "Harbor Currents", description: "a navigation app" },
-	{ title : "Mini Golf", description: "a html5 canvas game" }
+	{ title : "Leveler", description: "a video game review site", image: levelerImage.src },
+	{ title : "Harbor Currents", description: "a navigation app", image: levelerImage.src },
+	{ title : "Mini Golf", description: "a html5 canvas game", image: levelerImage.src }
 ];
 
 function range(length : number) {
@@ -40,7 +44,6 @@ const circleLength = 12;
 				{lastName.split("").map((char, i) => <h1 class="animated shrink text-nowrap block" style={{"animation-delay" : `${(firstName.length+i)*100}ms`}}>{char}</h1>)}
 			</div>
 			<h2 class="text-gray-400 animated" style={{"animation-delay" : `${(firstName.length+lastName.length)*100}ms`}}>Software Developer</h2>
-			<h1 class="bg-red-500 hover:bg-blue-500">hello</h1>
 		</div>
 	</section>
 	<section>
@@ -49,8 +52,12 @@ const circleLength = 12;
 			<div>
 				<div class="projects-grid object-contain">
 					{projects.map((project) => <div class="project-item aspect-video w-48 m-5 relative">
-						<div class="bg-purple-500 w-full h-full rounded-lg absolute top-0 left-0 front"><p>{project.title}</p></div>
-						<div class="bg-red-600 w-full h-full rounded-lg absolute top-0 left-0 back"><p>{project.description}</p><button>go to project</button></div>
+						<div class="bg-purple-500 w-full h-full rounded-lg relative top-0 left-0 front" style={{ backgroundImage: `url(${levelerImage.src})`, backgroundSize: "cover" }}>
+							<div class="w-full h-full flex flex-col justify-center align-middle">
+								<h3 class="text-white self-start mx-auto shadow-md">{project.title}</h3>
+							</div>
+						</div>
+						<div class="bg-gray-600 w-full h-full rounded-lg absolute top-0 left-0 back"><p class="text-white">{project.description}</p><button>go to project</button></div>
 					</div>)}
 				</div>
 			</div>
@@ -132,7 +139,7 @@ const circleLength = 12;
 		font-weight: 700;
 	}
 
-	h1, h2 {
+	h1, h2, h3{
 		font-family: 'Fraunces Variable', serif;
 	}
 
@@ -157,6 +164,7 @@ const circleLength = 12;
 	.project-item div {
 		transition-property: transform, z-index;
 		transition-duration: 0.75s;
+		transform-origin: center;
 	}
 
 	.project-item:hover div {
