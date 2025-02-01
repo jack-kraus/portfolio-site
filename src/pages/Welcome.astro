@@ -1,10 +1,11 @@
 ---
 import '@fontsource-variable/fraunces';
 import { Vector } from '../code/vector';
-import Project from '../components/project.astro';
+import Project from "../components/Project.astro";
 
 import { Image } from 'astro:assets';
 import levelerImage from "../assets/leveler.png";
+import TextAnimate from '../components/TextAnimate.astro';
 
 
 const firstName = "Jack";
@@ -39,9 +40,9 @@ const circleLength = 12;
 	<section id="overview">
 		<div class="intro align-middle">
 			<div>
-				{firstName.split("").map((char, i) => <h1 class="animated shrink text-nowrap block" style={{"animation-delay" : `${i*100}ms`}}>{char}</h1>)}
-				<h1 class="text-nowrap block">&nbsp;</h1>
-				{lastName.split("").map((char, i) => <h1 class="animated shrink text-nowrap block" style={{"animation-delay" : `${(firstName.length+i)*100}ms`}}>{char}</h1>)}
+				<TextAnimate text={firstName}/>
+				<h1 class="text-nowrap inline">&nbsp;</h1>
+				<TextAnimate text={lastName} offset={firstName.length}/>
 			</div>
 			<h2 class="text-gray-400 animated" style={{"animation-delay" : `${(firstName.length+lastName.length)*100}ms`}}>Software Developer</h2>
 		</div>
@@ -50,15 +51,8 @@ const circleLength = 12;
 		<div class="intro align-middle">
 			<h1>Projects</h1>
 			<div>
-				<div class="projects-grid object-contain">
-					{projects.map((project) => <div class="project-item aspect-video w-48 m-5 relative">
-						<div class="bg-purple-500 w-full h-full rounded-lg relative top-0 left-0 front" style={{ backgroundImage: `url(${levelerImage.src})`, backgroundSize: "cover" }}>
-							<div class="w-full h-full flex flex-col justify-center align-middle">
-								<h3 class="text-white self-start mx-auto shadow-md">{project.title}</h3>
-							</div>
-						</div>
-						<div class="bg-gray-600 w-full h-full rounded-lg absolute top-0 left-0 back"><p class="text-white">{project.description}</p><button>go to project</button></div>
-					</div>)}
+				<div class="projects-grid object-contain p-5 gap-5">
+					{projects.map((project, index) => <Project title={project.title} description={project.description} image={project.image} index={index}/>)}
 				</div>
 			</div>
 		</div> 
@@ -132,6 +126,25 @@ const circleLength = 12;
 		}
 	}
 
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+	}
+	
+	@media only screen and (max-width: 600px) {
+		.projects-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>
+
+<style is:global>
+	.overlap {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
 	h1 {
 		font-size: 5rem;
 		color: white;
@@ -139,7 +152,7 @@ const circleLength = 12;
 		font-weight: 700;
 	}
 
-	h1, h2, h3{
+	h1, h2, h3, p, button {
 		font-family: 'Fraunces Variable', serif;
 	}
 
@@ -152,49 +165,18 @@ const circleLength = 12;
 		font-weight: 300;
 	}
 
-	.projects-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+	p {
+		font-weight: 300;
 	}
 
-	.projects-parent {
-		aspect-ratio: 3 / 4;
-	}
-
-	.project-item div {
-		transition-property: transform, z-index;
-		transition-duration: 0.75s;
-		transform-origin: center;
-	}
-
-	.project-item:hover div {
-		transform: perspective(500px) rotate3d(0, 1, 0, 180deg);
-	}
-
-	.project-item div.front, .project-item:hover div.back {
-		z-index: 10;
-	}
-
-	.project-item div.back * {
-		scale: -1 1;
-	}
-
-	.project-item div.back, .project-item:hover div.front {
-		z-index: 0;
-	}
-	
 	@media only screen and (max-width: 600px) {
-		.projects-grid {
-			grid-template-columns: repeat(3, calc((100% - 20px) / 2));
+		h1 {
+			font-size: 3.5rem;
 		}
-	}
-</style>
 
-<style is:global>
-	.overlap {
-		position: absolute;
-		top: 0;
-		left: 0;
+		h2 {
+			font-size: 1.5rem;
+		}
 	}
 </style>
 

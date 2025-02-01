@@ -1,10 +1,51 @@
 ---
-const { name, photo, tags } = Astro.props;
-import { Image } from 'astro:assets';
-import svgReference from '../assets/leveler.png';
+const { title, description, image, index } = Astro.props;
 ---
-<div class="bg-black rounded-lg relative overflow-hidden group">
-    <img src={svgReference.src} class="w-full h-full object-fill hover:blur-sm transition-all duration-700 hover:brightness-50"/>
-    <h1 class="pl-3 pb-2 absolute left-0 bottom-0 text-white font-bold text-xl shadow-black drop-shadow-lg">{name}</h1>
-    <h2 class="absolute -bottom-5 group-hover:bottom-5 px-auto transition-all left-0 text-white">hello</h2>
+
+<div class="project-item aspect-video w-48 relative" data-index={index}>
+    <div class="w-full h-full">
+		<div class="bg-purple-500 w-full h-full rounded-lg relative top-0 left-0 front" style={{ backgroundImage: `url(${image})`, backgroundSize: "cover" }}>
+			<div class="w-full h-full flex flex-col justify-center align-middle">
+				<h3 class="text-white self-start mx-auto">{title}</h3>
+			</div>
+		</div>
+		<div class="bg-black w-full h-full rounded-lg absolute top-0 left-0 back flex flex-col justify-center">
+			<img class="bg-cover absolute left-0 top-0 w-full h-full rounded-lg" src={image}>
+			<p class="text-white text-center px-2">{description}</p>
+			<button>go to project</button>
+		</div>
+	</div>
 </div>
+
+<style>
+    .project-item div div, .project-item div {
+		transition-property: transform, z-index, translate;
+		transition-duration: 0.75s;
+		transform-origin: center;
+	}
+
+	.project-item:hover div div {
+		transform: perspective(500px) rotate3d(0, 1, 0, 180deg);
+	}
+
+	.project-item div div.front, .project-item:hover div div.back {
+		z-index: 10;
+	}
+
+	.project-item div div.back * {
+		scale: -1 1;
+	}
+
+	.project-item div div.back, .project-item:hover div div.front {
+		z-index: 0;
+	}
+
+	.project-item div div.back img {
+		filter: blur(3px) brightness(50%);
+	}
+
+	h3 {
+		background: radial-gradient(black 0%, rgba(0, 0, 0, 0) 80%);
+		padding: 5px;
+	}
+</style>
