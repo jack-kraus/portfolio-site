@@ -6,6 +6,7 @@ import Project from "../components/Project.astro";
 import { Image } from 'astro:assets';
 import levelerImage from "../assets/leveler.png";
 import TextAnimate from '../components/TextAnimate.astro';
+import ProjectModal from '../components/ProjectModal.astro';
 
 
 const firstName = "Jack";
@@ -73,6 +74,7 @@ const circleLength = 12;
 	
 	
 	-->
+	<ProjectModal github="game-tracker"/>
 	<section></section>
 	<section></section>
 	<section></section>
@@ -152,7 +154,7 @@ const circleLength = 12;
 		font-weight: 700;
 	}
 
-	h1, h2, h3, p, button {
+	h1, h2, h3, p, button, li, div {
 		font-family: 'Fraunces Variable', serif;
 	}
 
@@ -202,8 +204,6 @@ const circleLength = 12;
 	window.addEventListener('scroll', () => {
 		snapItems.forEach((item) => {
 			const rect = item.getBoundingClientRect();
-			console.log(rect);
-			console.log(window.innerHeight);
 			if (rect.top >= 0 && Math.floor(rect.bottom) <= window.innerHeight) {
 				document.querySelectorAll<HTMLElement>(".animated").forEach((el) => {
 					// reset all animations

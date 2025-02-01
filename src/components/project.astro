@@ -1,5 +1,6 @@
 ---
 const { title, description, image, index } = Astro.props;
+import ProjectModal from "./ProjectModal.astro";
 ---
 
 <div class="project-item aspect-video w-48 relative" data-index={index}>
@@ -16,6 +17,7 @@ const { title, description, image, index } = Astro.props;
 		</div>
 	</div>
 </div>
+
 
 <style>
     .project-item div div, .project-item div {
