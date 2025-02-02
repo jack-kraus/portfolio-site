@@ -1,5 +1,5 @@
 ---
-const { title, description, image, index } = Astro.props;
+const { title, description, image, index, github } = Astro.props;
 import ProjectModal from "./ProjectModal.astro";
 ---
 
@@ -14,10 +14,11 @@ import ProjectModal from "./ProjectModal.astro";
 			<img class="bg-cover absolute left-0 top-0 w-full h-full rounded-lg" src={image}>
 			<p class="text-white text-center px-2">{description}</p>
 			<button>go to project</button>
+			<a href={`https://github.com/${github}`}>github</a>
 		</div>
 	</div>
+	<ProjectModal github={github} index={index}/>
 </div>
-
 
 <style>
     .project-item div div, .project-item div {
@@ -51,3 +52,13 @@ import ProjectModal from "./ProjectModal.astro";
 		padding: 5px;
 	}
 </style>
+
+<script define:vars={{index}}>
+	const this_modal = document.querySelector(`.project-modal[data-index="${index}"]`);
+
+	$(`.project-item[data-index="${index}"]`).find("button").on("click", () => {
+		console.log("hello");
+		$(this_modal).show();
+		$(`.project-modal:not([data-index="${index}"])`).hide();
+	});
+</script>

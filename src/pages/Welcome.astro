@@ -1,21 +1,25 @@
 ---
 import '@fontsource-variable/fraunces';
-import { Vector } from '../code/vector';
 import Project from "../components/Project.astro";
 
-import { Image } from 'astro:assets';
 import levelerImage from "../assets/leveler.png";
 import TextAnimate from '../components/TextAnimate.astro';
-import ProjectModal from '../components/ProjectModal.astro';
-
 
 const firstName = "Jack";
 const lastName = "Kraus";
 
-const projects = [
-	{ title : "Leveler", description: "a video game review site", image: levelerImage.src },
-	{ title : "Harbor Currents", description: "a navigation app", image: levelerImage.src },
-	{ title : "Mini Golf", description: "a html5 canvas game", image: levelerImage.src }
+interface Project {
+	title : string,
+	description : string,
+	image : string,
+	github : string
+}
+
+const projects : Project[] = [
+	{ title : "Leveler", description: "a video game review site", image: levelerImage.src, github:"jack-kraus/game-tracker" },
+	{ title : "Harbor Currents", description: "a navigation app", image: levelerImage.src, github:"jack-kraus/game-tracker" },
+	{ title : "Mini Golf", description: "a html5 canvas game", image: levelerImage.src, github:"jack-kraus/Mini-Golf-Game" },
+	{ title : "Job Application Tracker", description: "a tracker for applications", image: levelerImage.src, github:"CS546-Team23/Job-Application-Tracker" }
 ];
 
 function range(length : number) {
@@ -53,7 +57,7 @@ const circleLength = 12;
 			<h1>Projects</h1>
 			<div>
 				<div class="projects-grid object-contain p-5 gap-5">
-					{projects.map((project, index) => <Project title={project.title} description={project.description} image={project.image} index={index}/>)}
+					{projects.map((project, index) => <Project title={project.title} description={project.description} image={project.image} index={index} github={project.github}/>)}
 				</div>
 			</div>
 		</div> 
@@ -74,7 +78,7 @@ const circleLength = 12;
 	
 	
 	-->
-	<ProjectModal github="game-tracker"/>
+	
 	<section></section>
 	<section></section>
 	<section></section>
@@ -265,4 +269,31 @@ const circleLength = 12;
 	
 	
 
+</script>
+
+<script>
+    const modals = document.getElementsByClassName("project-modal");
+    
+    function currentScrollPercentage(element : Element)
+	{
+        if (!element) return 0;
+		return element.scrollTop / (element.scrollHeight - element.clientHeight);
+	}
+
+    for (let i = 0; i < modals.length; i++) {
+		const element = modals[i];
+
+        $(element).find("article").on("scroll", () => {
+            const percent = currentScrollPercentage(element);
+            if (percent < 0.01) $(element).addClass("top").removeClass("bottom");
+            else if (percent > 0.99) $(element).addClass("bottom").removeClass("top");
+            else $(element).removeClass("bottom").removeClass("top");
+        });
+
+        $(element).find("button").on("click", () => {
+			$(".project-modal").hide();
+        });
+
+        $(element).hide();
+    }
 </script>

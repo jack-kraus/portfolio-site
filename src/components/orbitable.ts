@@ -50,7 +50,6 @@ import { Vector } from "../code/vector";
 				
 				const { top, left } = this.element.getBoundingClientRect();
 				const { top:pTop, left:pLeft, right:pRight, bottom:pBottom } = this.element.parentElement?.getBoundingClientRect() ?? this.element.getBoundingClientRect();
-				console.log(pRight - pLeft, pBottom - pTop);
 				const newPos = new Vector(clientX, clientY);
 				
 				newPos.subtract(this.offset);
@@ -94,7 +93,6 @@ import { Vector } from "../code/vector";
 
 				
 				dsV.toLength(ds);
-				console.log(this.speed.length());
 
 				this.element.style.transform = `translate(${this.anchor.x + dsV.x}px, ${this.anchor.y + dsV.y}px)`;
 
