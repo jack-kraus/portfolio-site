@@ -22,6 +22,12 @@ const projects : Project[] = [
 	{ title : "Job Application Tracker", description: "a tracker for applications", image: levelerImage.src, github:"CS546-Team23/Job-Application-Tracker" }
 ];
 
+const skills = [
+	{ category : "Programming Languages", list : "Python, Java, C, C++, JavaScript, Typescript, OCaml, R" },
+	{ category : "Web Development", list : "HTML, CSS, React/React Native, MongoDB, PostgreSQL, Express, Tailwind, Sass" },
+	{ category : "Collaboration", list : "Github, Gitlab, Slack, Figma, Jira, Microsoft Suite, Google Suite, Photoshop" }
+]
+
 function range(length : number) {
 	let i = length;
 	const out = [];
@@ -52,7 +58,8 @@ const circleLength = 12;
 			<h2 class="text-gray-400 animated" style={{"animation-delay" : `${(firstName.length+lastName.length)*100}ms`}}>Software Developer</h2>
 		</div>
 	</section>
-	<section>
+
+	<section id="projects">
 		<div class="intro align-middle">
 			<h1>Projects</h1>
 			<div>
@@ -62,24 +69,16 @@ const circleLength = 12;
 			</div>
 		</div> 
 	</section>
-
-	<!-- <section id="projects">
-		<div class="max-w-full h-full bg-red-500 object-contain">
-			<div class="max-h-full max-w-full justify-center align-middle bg-blue-600 overflow-hidden p-10 m-auto projects-parent">
-				<div class="bg-green-500 overflow-y-scroll max-w-full aspect-video snap-y">
-					<div class="projects-grid object-contain max-w-full">
-						{Array.apply(null, Array(20)).map(() => <div class="bg-purple-600 rounded-lg snap-start aspect-video"></div>)}
-					</div>
-				</div>
-			</div>
+	
+	<section>
+		<div class="intro align-middle">
+			{skills.map(({ category, list }) => <div class="flex flex-col align-middle justify-center">
+				<h2 class="text-center">{category}</h2>
+				<div class="flex gap-2 flex-wrap justify-center">{list.split(", ").map((item) => <p class="bg-purple-500 p-2 rounded-md">{item}</p>)}</div>
+			</div>)}
 		</div>
 	</section>
 	
-	
-	
-	-->
-	
-	<section></section>
 	<section></section>
 	<section></section>
 	<section></section>
