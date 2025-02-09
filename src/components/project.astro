@@ -17,7 +17,7 @@ const delayOffset = 100 * "Projects".length + 100;
 			<img class="bg-cover absolute left-0 top-0 w-full h-full rounded-lg" src={image}>
 			<p class="text-white text-center px-2">{description}</p>
 			<button>go to project</button>
-			<a href={`https://github.com/${github}`}>github</a>
+			{github && <a href={`https://github.com/${github}`}>github</a>}
 		</div>
 	</div>
 	<ProjectModal github={github} index={index}/>
@@ -30,8 +30,7 @@ const delayOffset = 100 * "Projects".length + 100;
 	}
 
 	.project-item div {
-		transition-property: z-index, transform;
-		transition-duration: 0.75s;
+		transition: transform 0.75s, box-shadow 0.25s, z-index 0.75s;
 		transform-origin: center;
 	}
 
@@ -41,6 +40,10 @@ const delayOffset = 100 * "Projects".length + 100;
 
 	.project-item:hover > div {
 		transform: perspective(500px) rotate3d(0, 1, 0, 180deg);
+	}
+
+	.project-item:hover div.front {
+		box-shadow: 0 0 10px #ad6ed1;
 	}
 
 	.project-item div.front, .project-item:hover div.back {
