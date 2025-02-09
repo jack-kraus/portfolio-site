@@ -1,16 +1,19 @@
 ---
 const { title, description, image, index, github } = Astro.props;
 import ProjectModal from "./ProjectModal.astro";
+
+const delayStep = 200;
+const delayOffset = 100 * "Projects".length + 100;
 ---
 
-<div class="project-item aspect-video w-48 relative" data-index={index}>
-    <div class="w-full h-full">
-		<div class="bg-purple-500 w-full h-full rounded-lg relative top-0 left-0 front" style={{ backgroundImage: `url(${image})`, backgroundSize: "cover" }}>
+<div class="project-item aspect-video relative" data-index={index}>
+    <div class="animated w-full h-full" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
+		<div class="bg-purple-500 w-full h-full rounded-lg relative top-0 left-0 front" style={{ backgroundImage: `url(${image})`, backgroundSize: "cover", animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<div class="w-full h-full flex flex-col justify-center align-middle">
 				<h3 class="text-white self-start mx-auto">{title}</h3>
 			</div>
 		</div>
-		<div class="bg-black w-full h-full rounded-lg absolute top-0 left-0 back flex flex-col justify-center">
+		<div class="bg-black w-full h-full rounded-lg absolute top-0 left-0 back animated flex flex-col justify-center" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<img class="bg-cover absolute left-0 top-0 w-full h-full rounded-lg" src={image}>
 			<p class="text-white text-center px-2">{description}</p>
 			<button>go to project</button>
@@ -21,25 +24,34 @@ import ProjectModal from "./ProjectModal.astro";
 </div>
 
 <style>
-    .project-item div div, .project-item div {
-		transition-property: transform, z-index, translate;
+	.project-item > div {
+		animation: flipIn 1s;
+		animation-fill-mode: backwards;
+	}
+
+	.project-item div {
+		transition-property: z-index, transform;
 		transition-duration: 0.75s;
 		transform-origin: center;
 	}
 
-	.project-item:hover div div {
+	.project-item div.back {
+		animation: steps(1) 1s unhide;
+	}
+
+	.project-item:hover > div {
 		transform: perspective(500px) rotate3d(0, 1, 0, 180deg);
 	}
 
-	.project-item div div.front, .project-item:hover div div.back {
+	.project-item div.front, .project-item:hover div.back {
 		z-index: 10;
 	}
 
-	.project-item div div.back * {
+	.project-item div.back * {
 		scale: -1 1;
 	}
 
-	.project-item div div.back, .project-item:hover div div.front {
+	.project-item div.back, .project-item:hover div.front {
 		z-index: 0;
 	}
 
@@ -51,13 +63,32 @@ import ProjectModal from "./ProjectModal.astro";
 		background: radial-gradient(black 0%, rgba(0, 0, 0, 0) 80%);
 		padding: 5px;
 	}
+
+	@keyframes flipIn {
+		0% {
+			transform: perspective(500px) rotate3d(0, 1, 0, 90deg);
+		}
+
+		100% {
+			transform: perspective(500px) rotate3d(0, 1, 0, 0deg);
+		}
+	}
+
+	@keyframes unhide {
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
+	}
 </style>
 
 <script define:vars={{index}}>
 	const this_modal = document.querySelector(`.project-modal[data-index="${index}"]`);
 
 	$(`.project-item[data-index="${index}"]`).find("button").on("click", () => {
-		console.log("hello");
 		$(this_modal).show();
 		$(`.project-modal:not([data-index="${index}"])`).hide();
 	});
