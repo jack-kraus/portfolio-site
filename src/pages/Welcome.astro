@@ -1,9 +1,9 @@
 ---
 import '@fontsource-variable/fraunces';
-import Project from "../components/Project.astro";
 
 import levelerImage from "../assets/leveler.png";
 import TextAnimate from '../components/TextAnimate.astro';
+import Project from '../components/Project.astro';
 
 const firstName = "Jack";
 const lastName = "Kraus";
@@ -37,15 +37,31 @@ function range(length : number) {
 	}
 	return out;
 }
-const circleLength = 12;
+
+const circleLength = 15;
+const circleMaxWidth = 10;
+const circleMinWidth = 3;
+const circleDiff = 30;
 ---
 
 <main>
-	<div class="fixed h-screen top-0 left-0">
-		{range(circleLength).map((i) => {
-			return <div class={`bg-white rounded-full w-20 h-20 absolute transition-all circles ${i < 0 ? "-" : ""}cindex-${Math.abs(i)}`}/>;
-		})}
-		<div class="bg-white" id="path"></div>
+	<div id="background" class="fixed w-screen h-screen -z-10">
+	</div>
+
+	<div class="fixed h-screen w-screen top-0 left-0" id="scrollContainer">
+		<svg width={circleMaxWidth+5} height="100%" class="blur-svg">
+			{range(circleLength).map((i) => {
+				const circleDimension = (circleMaxWidth - circleMinWidth) * 0.5 * (Math.cos(i * Math.PI / circleLength) + 1) + circleMinWidth;
+				return <circle
+					r={circleDimension / 2}
+					cx={circleMaxWidth / 2 + 2.5}
+					cy={circleDiff * i / circleLength + circleDiff}
+					class="circles"
+					fill={`white`}
+					style={{"transition-duration": `${0.05 + Math.abs(i) / circleLength * 0.05}s`}}
+				/>;
+			})}
+		</svg>
 	</div>
 
 	<section id="overview">
@@ -61,17 +77,18 @@ const circleLength = 12;
 
 	<section id="projects">
 		<div class="intro align-middle">
-			<h1>Projects</h1>
 			<div>
-				<div class="projects-grid object-contain p-5 gap-5">
-					{projects.map((project, index) => <Project title={project.title} description={project.description} image={project.image} index={index} github={project.github}/>)}
-				</div>
+				<TextAnimate text="Projects"/>
+			</div>
+			<div class="projects-grid object-contain p-5 gap-5 max-w-full stagger">
+				{projects.map((project, index) => <Project title={project.title} description={project.description} image={project.image} index={index} github={project.github}/>)}
 			</div>
 		</div> 
 	</section>
 	
 	<section>
 		<div class="intro align-middle">
+			<h1>Skills</h1>
 			{skills.map(({ category, list }) => <div class="flex flex-col align-middle justify-center">
 				<h2 class="text-center">{category}</h2>
 				<div class="flex gap-2 flex-wrap justify-center">{list.split(", ").map((item) => <p class="bg-purple-500 p-2 rounded-md">{item}</p>)}</div>
@@ -85,6 +102,20 @@ const circleLength = 12;
 </main>
 
 <style>
+	#scrollContainer {
+		padding: 3rem;
+		transition: padding 0.2s ease-out;
+	}
+
+	.blur-svg {
+		filter: brightness(2) contrast(17);
+		background-color: black;
+	}
+
+	.blur-svg circle {
+		filter: blur(2px);
+	}
+
 	body {
 		background-color: black;
 		height: 1000px;
@@ -104,18 +135,20 @@ const circleLength = 12;
 		height: 100%;
 		justify-content: center;
 		align-items: center;
-		max-width: 100vw;
 	}
 
 	section {
 		width: 100%;
 		height: 100vh;
 		scroll-snap-align: center;
+		padding: 40px;
 	}
 
 	.three {
 		animation: orbitIn 2s ease-in-out, orbitOut 2s ease-in-out;
 	}
+
+	
 
 	@keyframes fadein {
 		0% {
@@ -134,12 +167,23 @@ const circleLength = 12;
 	.projects-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		width: 750px;
 	}
 	
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 800px) {
 		.projects-grid {
 			grid-template-columns: repeat(2, 1fr);
+			grid-template-rows: repeat(3, 1fr);
 		}
+
+		#scrollContainer {
+			padding: 1rem;
+		}
+	}
+
+	#background {
+		background: radial-gradient(#160f2e 0%, #000000 70%);
 	}
 </style>
 
@@ -159,6 +203,7 @@ const circleLength = 12;
 
 	h1, h2, h3, p, button, li, div {
 		font-family: 'Fraunces Variable', serif;
+		transition: font-size 0.1s ease-out;
 	}
 
 	h1.animated, h2.animated {
@@ -185,13 +230,13 @@ const circleLength = 12;
 	}
 </style>
 
-<script>
+<script define:vars={{circleLength, circleMinWidth, circleMaxWidth, circleDiff}}>
 	function currentScrollPercentage()
 	{
 		return (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
 	}
 
-	function clamp(num : number, min : number, max : number) {
+	function clamp(num, min, max) {
 		return num <= min 
 			? min 
 			: num >= max 
@@ -200,15 +245,14 @@ const circleLength = 12;
 	}
 
 	const snapItems = document.querySelectorAll('section');
-	const circleItems = document.querySelectorAll<HTMLElement>('.circles');
-	const body = document.body;
-	const circleLength = 12;
+	const circleItems = document.getElementsByTagName('circle');
+	const staggerItems = document.querySelectorAll('.stagger');
 
 	window.addEventListener('scroll', () => {
 		snapItems.forEach((item) => {
 			const rect = item.getBoundingClientRect();
 			if (rect.top >= 0 && Math.floor(rect.bottom) <= window.innerHeight) {
-				document.querySelectorAll<HTMLElement>(".animated").forEach((el) => {
+				document.querySelectorAll(".animated").forEach((el) => {
 					// reset all animations
 					el.style.animationName = 'none';
 					el.offsetHeight;
@@ -220,54 +264,23 @@ const circleLength = 12;
 			}
 		});
 
-		circleItems.forEach((item) => {
+		// TODO: Do on screen resize too, and on load
+		Array.from(circleItems).forEach((item) => {
 			const ratio = currentScrollPercentage();
-			const indexString = Array.from(item.classList).filter((it) => it.includes("cindex-"))[0];
-			const index = (indexString[0] === "-" ? -1 : 1) * (parseInt(indexString[indexString.length-1]));
-
 			const { height } = item.getBoundingClientRect();
-			
-
-			
-
-			const circleMaxWidth = 15;
-			const circleMinWidth = 7;
-
-			const circleSubtract = 3;
-			const circleDiff = 50;
-			const heightSpace = window.innerHeight - height - circleDiff * 2;
-
-			// console.log(topRatio);
-			const duration = 0.05 + Math.abs(index) / circleLength * 0.05;
-			//if (duration) console.log(duration, topRatio, duration * topRatio);
-			item.style.transitionDuration = `${duration}s`;
-			const circleDimension = (circleMaxWidth - circleMinWidth) * 0.5 * (Math.cos(index * Math.PI / circleLength) + 1) + circleMinWidth;
-
-			item.style.width = `${circleDimension}px`;
-			item.style.height = `${circleDimension}px`;
-			item.style.left = `${(circleMaxWidth - circleDimension) / 3}px`;
-
-			const topTarget = heightSpace * ratio + circleDiff * index / circleLength + circleDiff;
-			item.style.top = `${topTarget}px`;
+			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
+			const topTarget = heightSpace * ratio;
+			item.style.transform = `translate(0px, ${topTarget}px)`;
 		});
-
-		const path = document.getElementById("path");
-		if (path) {
-			path.style.clipPath = "";
-			let clip = "";
-			Array.from(circleItems).sort((item : HTMLElement) => {
-				const indexString = Array.from(item.classList).filter((it) => it.includes("cindex-"))[0];
-				const index = (indexString[0] === "-" ? -1 : 1) * (parseInt(indexString[indexString.length-1]));
-				return index;
-			});
-		}
 	});
 
-	
+	$(".project-item div").on("animationend", function() {
+		$(this).addClass("transition-allowed");
+	});
 
-	
-	
-
+	$(".project-item div").on("animationstart", function() {
+		$(this).addClass("transition-allowed");
+	});
 </script>
 
 <script>
