@@ -1,0 +1,10 @@
+---
+let { text, offset } = Astro.props;
+offset ??= 0;
+---
+
+{text.split("").map((char : string, i : number) => {
+    if (char === " ") return <h1 class="text-nowrap">&nbsp;</h1>;
+    const delay = text.slice(0, i).replace(" ", "").length;
+    return <h1 class="animated text-nowrap bounce-animation" style={{"animation-delay" : `${(offset + delay)*100}ms`}}>{char}</h1>;
+})}
