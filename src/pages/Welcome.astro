@@ -3,7 +3,10 @@ import '@fontsource-variable/fraunces';
 
 import levelerImage from "../assets/leveler.png";
 import TextAnimate from '../components/TextAnimate.astro';
-import Project from '../components/Project.astro';
+import Project from '../components/project.astro';
+
+import skills from "../data/skills.json";
+import Skill from '../components/Skill.astro';
 
 const firstName = "Jack";
 const lastName = "Kraus";
@@ -15,18 +18,15 @@ interface Project {
 	github : string
 }
 
-const projects : Project[] = [
-	{ title : "Leveler", description: "a video game review site", image: levelerImage.src, github:"jack-kraus/game-tracker" },
-	{ title : "Harbor Currents", description: "a navigation app", image: levelerImage.src, github:"jack-kraus/game-tracker" },
-	{ title : "Mini Golf", description: "a html5 canvas game", image: levelerImage.src, github:"jack-kraus/Mini-Golf-Game" },
-	{ title : "Job Application Tracker", description: "a tracker for applications", image: levelerImage.src, github:"CS546-Team23/Job-Application-Tracker" }
-];
+console.log(levelerImage.src);
 
-const skills = [
-	{ category : "Programming Languages", list : "Python, Java, C, C++, JavaScript, Typescript, OCaml, R" },
-	{ category : "Web Development", list : "HTML, CSS, React/React Native, MongoDB, PostgreSQL, Express, Tailwind, Sass" },
-	{ category : "Collaboration", list : "Github, Gitlab, Slack, Figma, Jira, Microsoft Suite, Google Suite, Photoshop" }
-]
+const projects : Project[] = [
+	{ title : "Leveler", description: "a video game review site", image: levelerImage.src, github: "jack-kraus/game-tracker" },
+	{ title : "Harbor Currents", description: "a navigation app", image: levelerImage.src, github: "jack-kraus/game-tracker" },
+	{ title : "Mini Golf", description: "a html5 canvas game", image: levelerImage.src, github: "jack-kraus/Mini-Golf-Game" },
+	{ title : "Job Application Tracker", description: "a tracker for applications", image: levelerImage.src, github: "CS546-Team23/Job-Application-Tracker" },
+	{ title : "Tkinter Minesweeper", description: "a minesweeper game in Python", image: levelerImage.src, github: "jack-kraus/Tkinter-Minesweeper" }
+];
 
 function range(length : number) {
 	let i = length;
@@ -48,7 +48,7 @@ const circleDiff = 30;
 	<div id="background" class="fixed w-screen h-screen -z-10">
 	</div>
 
-	<div class="fixed h-screen w-screen top-0 left-0" id="scrollContainer">
+	<div class="fixed h-screen top-0 left-0" id="scrollContainer" class="-z-10">
 		<svg width={circleMaxWidth+5} height="100%" class="blur-svg">
 			{range(circleLength).map((i) => {
 				const circleDimension = (circleMaxWidth - circleMinWidth) * 0.5 * (Math.cos(i * Math.PI / circleLength) + 1) + circleMinWidth;
@@ -64,14 +64,17 @@ const circleDiff = 30;
 		</svg>
 	</div>
 
-	<section id="overview">
+	<section id="overview" class="relative">
+		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
+			<a href="#projects" id="projectsLink" class="self-center bg-purple-950 p-3 rounded-lg">Projects</a>
+		</div>
 		<div class="intro align-middle">
-			<div>
+			<div class="z-10">
 				<TextAnimate text={firstName}/>
 				<h1 class="text-nowrap inline">&nbsp;</h1>
 				<TextAnimate text={lastName} offset={firstName.length}/>
 			</div>
-			<h2 class="text-gray-400 animated" style={{"animation-delay" : `${(firstName.length+lastName.length)*100}ms`}}>Software Developer</h2>
+			<h2 class="text-gray-400 animated z-10" style={{"animation-delay" : `${(firstName.length+lastName.length)*100}ms`}}>Software Developer</h2>
 		</div>
 	</section>
 
@@ -86,12 +89,14 @@ const circleDiff = 30;
 		</div> 
 	</section>
 	
-	<section>
+	<section id="skills">
 		<div class="intro align-middle">
 			<h1>Skills</h1>
 			{skills.map(({ category, list }) => <div class="flex flex-col align-middle justify-center">
 				<h2 class="text-center">{category}</h2>
-				<div class="flex gap-2 flex-wrap justify-center">{list.split(", ").map((item) => <p class="bg-purple-500 p-2 rounded-md">{item}</p>)}</div>
+				<div class="flex gap-2 flex-wrap justify-center">
+					{list.map((item, i) => <Skill text={item.text} index={i}/>)}
+				</div>
 			</div>)}
 		</div>
 	</section>
@@ -102,6 +107,54 @@ const circleDiff = 30;
 </main>
 
 <style>
+	
+	
+	@keyframes orbit1 {
+		0% {
+			z-index: 10;
+			transform: perspective(2000px) rotate3d(calc(1vw / 1vh), 1, 0, 0deg) translate3d(15vw, -15vw, 0px) rotate3d(calc(1vw / 1vh), 1, 0, 0deg);
+		}
+
+		25% {
+			z-index: 0;
+		}
+
+		50% {
+			z-index: 10;
+		}
+
+		75% {
+			z-index: 20;
+		}
+
+		100% {
+			z-index: 10;
+			transform: perspective(2000px) rotate3d(calc(1vw / 1vh), 1, 0, 360deg) translate3d(15vw, -15vw, 0px) rotate3d(calc(1vw / 1vh), 1, 0, -360deg);
+		}
+	}
+
+	@keyframes fadein {
+		0% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
+	}
+
+	#orbitsParent {
+		perspective: 1000px;
+	}
+
+	#projectsLink {
+		animation: 20s orbit1 infinite linear, 0.3s fadein ease-out;
+	}
+
+	#projectsLink:hover {
+		animation-play-state: paused;
+	}
+
 	#scrollContainer {
 		padding: 3rem;
 		transition: padding 0.2s ease-out;
@@ -110,6 +163,7 @@ const circleDiff = 30;
 	.blur-svg {
 		filter: brightness(2) contrast(17);
 		background-color: black;
+		margin: 20px;
 	}
 
 	.blur-svg circle {
@@ -188,6 +242,13 @@ const circleDiff = 30;
 </style>
 
 <style is:global>
+	.notransition {
+		-webkit-transition: none !important;
+		-moz-transition: none !important;
+		-o-transition: none !important;
+		transition: none !important;
+	}
+
 	.overlap {
 		position: absolute;
 		top: 0;
@@ -236,17 +297,8 @@ const circleDiff = 30;
 		return (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
 	}
 
-	function clamp(num, min, max) {
-		return num <= min 
-			? min 
-			: num >= max 
-			? max 
-			: num
-	}
-
 	const snapItems = document.querySelectorAll('section');
 	const circleItems = document.getElementsByTagName('circle');
-	const staggerItems = document.querySelectorAll('.stagger');
 
 	window.addEventListener('scroll', () => {
 		snapItems.forEach((item) => {
@@ -274,12 +326,10 @@ const circleDiff = 30;
 		});
 	});
 
-	$(".project-item div").on("animationend", function() {
+	$(".project-card").on("animationend", function() {
 		$(this).addClass("transition-allowed");
-	});
-
-	$(".project-item div").on("animationstart", function() {
-		$(this).addClass("transition-allowed");
+	}).on("animationstart", function() {
+		$(this).removeClass("transition-allowed");
 	});
 </script>
 

@@ -1,0 +1,81 @@
+---
+let { text, index } = Astro.props;
+index ??= 0;
+---
+
+<div class="p-2 rounded-md text-black skill animated" style={{"animation-delay": `${50 * index}ms`}}>
+    <p>{text}</p>
+</div>
+
+<style>
+    @keyframes slide {
+        from {
+            left: -100px;
+            opacity: 0;
+        }
+
+        to {
+            left: 0px;
+            opacity: 1;
+        }
+    }
+
+    .skill {
+        --low-opacity: 0.35;
+        animation-fill-mode: backwards;
+
+		transition: transform 0.1s ease-in-out, filter 0.5s ease-out;
+		transform-origin: center;
+
+        position: relative;
+        animation: slide 1s ease-out;
+        background-color: #aa60df;
+	}
+
+	.skill:hover {
+		transform: perspective(1000px) translate3d(0, 0, 100px);
+		box-shadow: 0 0 10px white;
+	}
+
+    /* Left and right skill */
+
+	.skill:hover + .skill {
+		transform: perspective(1000px) translate3d(0, 0, 50px) rotate3d(0, 1, 0, 45deg);
+	}
+
+    .skill:has(+ .skill:hover) {
+		transform: perspective(1000px) translate3d(0, 0, 50px) rotate3d(0, 1, 0, -45deg);
+	}
+
+    /* Linear Gradient on left item and right item */
+
+	.skill:hover + .skill:after {
+		width: 100%;
+		height: 100%;
+		content: '';
+		left: 0;
+		top: 0;
+		position: absolute;
+		background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,var(--low-opacity)));
+	}
+
+	.skill:has(+ .skill:hover):after {
+		width: 100%;
+		height: 100%;
+		content: '';
+		left: 0;
+		top: 0;
+		position: absolute;
+		background: linear-gradient(to left, rgba(0,0,0,0), rgba(0,0,0,var(--low-opacity)));
+	}
+
+	/* Skills to left and right but not immediately to left and right */
+
+	.skill:hover ~ .skill:not(.skill:hover + .skill){
+		filter: brightness(var(--low-opacity));
+	}
+
+	.skill:has(~ .skill:hover):not(.skill:has(+ .skill:hover)) {
+		filter: brightness(var(--low-opacity));
+	}
+</style>
