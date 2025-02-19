@@ -7,7 +7,7 @@ const markdown = await response.text();
 const content = marked.parse(markdown);
 ---
 
-<div class="project-modal fixed h-screen w-screen z-50 flex justify-center align-middle left-0 top-0 bg-black p-10" data-index={index}>
+<div class="project-modal fixed h-screen w-screen z-50 justify-center align-middle left-0 top-0 bg-black p-10" data-index={index}>
     <div class="modal w-full h-full rounded-lg flex flex-col">
         <button class="self-end text-4xl">&times;</button>
         <article class="p-10 overflow-scroll bg-zinc-900 rounded-md">
@@ -17,6 +17,9 @@ const content = marked.parse(markdown);
 </div>
 
 <style is:global>
+    .project-modal {
+        display: none;
+    }
     article {
         background-image: linear-gradient(black 0%,rgba(0, 0, 0, 0) 2%, rgba(0, 0, 0, 0) 98%, black 100%);
         transition: background-image;

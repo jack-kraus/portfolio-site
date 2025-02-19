@@ -7,6 +7,7 @@ import Project from '../components/project.astro';
 
 import skills from "../data/skills.json";
 import Skill from '../components/Skill.astro';
+import OrbitObject from '../components/orbitObject.astro';
 
 const firstName = "Jack";
 const lastName = "Kraus";
@@ -66,7 +67,9 @@ const circleDiff = 30;
 
 	<section id="overview" class="relative">
 		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
-			<a href="#projects" id="projectsLink" class="self-center bg-purple-950 p-3 rounded-lg">Projects</a>
+			<OrbitObject link="#projects" text="Projects" offset={firstName.length + lastName.length + 5}/>
+			<OrbitObject link="#skills" text="Skills" offset={firstName.length + lastName.length + 5}/>
+			<OrbitObject link="/" text="Download Resume" offset={firstName.length + lastName.length + 5}/>
 		</div>
 		<div class="intro align-middle">
 			<div class="z-10">
@@ -107,8 +110,6 @@ const circleDiff = 30;
 </main>
 
 <style>
-	
-	
 	@keyframes orbit1 {
 		0% {
 			z-index: 10;
@@ -141,18 +142,6 @@ const circleDiff = 30;
 		100% {
 			opacity: 1;
 		}
-	}
-
-	#orbitsParent {
-		perspective: 1000px;
-	}
-
-	#projectsLink {
-		animation: 20s orbit1 infinite linear, 0.3s fadein ease-out;
-	}
-
-	#projectsLink:hover {
-		animation-play-state: paused;
 	}
 
 	#scrollContainer {
@@ -353,7 +342,7 @@ const circleDiff = 30;
         });
 
         $(element).find("button").on("click", () => {
-			$(".project-modal").hide();
+			$(".project-modal").css("display", "none");;
         });
 
         $(element).hide();

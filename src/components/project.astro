@@ -145,7 +145,7 @@ const delayOffset = 100 * "Projects".length + 100;
 	const this_modal = document.querySelector(`.project-modal[data-index="${index}"]`);
 
 	$(`.project-item[data-index="${index}"]`).find("button").on("click", () => {
-		$(this_modal).show();
+		$(this_modal).css("display", "flex");
 		$(`.project-modal:not([data-index="${index}"])`).hide();
 	});
 </script>
