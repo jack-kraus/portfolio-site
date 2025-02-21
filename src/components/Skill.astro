@@ -1,6 +1,8 @@
 ---
 let { text, index } = Astro.props;
 index ??= 0;
+
+const code = text.replaceAll("+", "p").replaceAll(" ", "_").toLowerCase();
 ---
 
 <div class="p-2 rounded-md text-black skill animated" style={{"animation-delay": `${50 * index}ms`}}>
@@ -8,6 +10,7 @@ index ??= 0;
 </div>
 
 <style>
+
     @keyframes slide {
         from {
             left: -100px;
@@ -22,19 +25,22 @@ index ??= 0;
 
     .skill {
         --low-opacity: 0.35;
-        animation-fill-mode: backwards;
 
 		transition: transform 0.1s ease-in-out, filter 0.5s ease-out;
 		transform-origin: center;
 
         position: relative;
-        animation: slide 1s ease-out;
+        animation: slide 1s ease-out both;
         background-color: #aa60df;
 	}
 
 	.skill:hover {
 		transform: perspective(1000px) translate3d(0, 0, 100px);
 		box-shadow: 0 0 10px white;
+	}
+
+	p, a {
+		color: white;
 	}
 
     /* Left and right skill */

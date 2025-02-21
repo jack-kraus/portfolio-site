@@ -4,10 +4,11 @@
         "list" : [
             { "text": "HTML" },
             { "text": "CSS" },
-            { "text": "React/React Native" },
+            { "text": "React" },
+            { "text": "React Native" },
             { "text": "MongoDB" }, 
             { "text": "PostgreSQL" },
-            { "text":  "Express" },
+            { "text": "Express" },
             { "text": "Tailwind" },
             { "text": "Sass" }
         ]
@@ -32,7 +33,7 @@
             { "text": "Gitlab" },
             { "text": "Slack" },
             { "text": "Figma" },
-            { "text":  "Jira" },
+            { "text": "Jira" },
             { "text": "Microsoft Suite" },
             { "text": "Google Suite" },
             { "text": "Photoshop" }

@@ -43,6 +43,10 @@ const circleLength = 15;
 const circleMaxWidth = 10;
 const circleMinWidth = 3;
 const circleDiff = 30;
+
+
+const search = Astro.url.searchParams.get('filter') || '';
+console.log(search);
 ---
 
 <main>
@@ -66,6 +70,7 @@ const circleDiff = 30;
 	</div>
 
 	<section id="overview" class="relative">
+		<p>{search}</p>
 		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
 			<OrbitObject link="#projects" text="Projects" offset={firstName.length + lastName.length + 5}/>
 			<OrbitObject link="#skills" text="Skills" offset={firstName.length + lastName.length + 5}/>
@@ -94,11 +99,13 @@ const circleDiff = 30;
 	
 	<section id="skills">
 		<div class="intro align-middle">
-			<h1>Skills</h1>
+			<div>
+				<TextAnimate text="Skills"/>
+			</div>
 			{skills.map(({ category, list }) => <div class="flex flex-col align-middle justify-center">
 				<h2 class="text-center">{category}</h2>
 				<div class="flex gap-2 flex-wrap justify-center">
-					{list.map((item, i) => <Skill text={item.text} index={i}/>)}
+					{list.map((item : any, i) => <Skill text={item.text} index={i} filterable={item.filterable}/>)}
 				</div>
 			</div>)}
 		</div>
@@ -231,6 +238,10 @@ const circleDiff = 30;
 </style>
 
 <style is:global>
+	.paused {
+		animation-play-state: paused !important;
+	}
+
 	:root {
 		--purple: #ad6ed1;
 	}
@@ -293,21 +304,34 @@ const circleDiff = 30;
 	const snapItems = document.querySelectorAll('section');
 	const circleItems = document.getElementsByTagName('circle');
 
-	window.addEventListener('scroll', () => {
+
+	function resetAnimations() {
 		snapItems.forEach((item) => {
 			const rect = item.getBoundingClientRect();
 			if (rect.top >= 0 && Math.floor(rect.bottom) <= window.innerHeight) {
-				document.querySelectorAll(".animated").forEach((el) => {
+				$(".animated").each(function () {
 					// reset all animations
-					el.style.animationName = 'none';
-					el.offsetHeight;
-					el.style.animationName = '';
+					this.style.animationName = 'none';
+					this.offsetHeight;
+					this.style.animationName = '';
 
-					// play the animation if in current section
-					el.style.animationPlayState = item.contains(el) ? "running" : "paused";
+					if ($.contains(item, this)) {
+						$(this).removeClass("paused");
+						
+					}
+					else {
+						$(this).addClass("paused");
+						console.log(this);
+					}
 				});
 			}
 		});
+	}
+
+	resetAnimations();
+
+	window.addEventListener('scroll', () => {
+		resetAnimations();
 
 		// TODO: Do on screen resize too, and on load
 		Array.from(circleItems).forEach((item) => {
