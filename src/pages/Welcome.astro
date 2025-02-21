@@ -70,7 +70,6 @@ console.log(search);
 	</div>
 
 	<section id="overview" class="relative">
-		<p>{search}</p>
 		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
 			<OrbitObject link="#projects" offset={firstName.length + lastName.length + 5}>Projects</OrbitObject>
 			<OrbitObject link="#skills" offset={firstName.length + lastName.length + 5}>Skills</OrbitObject>
@@ -104,8 +103,8 @@ console.log(search);
 			<div>
 				<TextAnimate text="Skills"/>
 			</div>
-			{skills.map(({ category, list }) => <div class="flex flex-col align-middle justify-center">
-				<h2 class="text-center">{category}</h2>
+			{skills.map(({ category, list }, index) => <div class="flex flex-col align-middle justify-center">
+				<h2 class="text-gray-400 animated z-10 text-center" style={{"animation-delay" : `${("Skills".length + index) * 100}ms`}}>{category}</h2>
 				<div class="flex gap-2 flex-wrap justify-center">
 					{list.map((item : any, i) => <Skill text={item.text} index={i} filterable={item.filterable}/>)}
 				</div>
