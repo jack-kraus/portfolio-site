@@ -1,6 +1,7 @@
 ---
-let { text, offset } = Astro.props;
+let { text, offset, animationName } = Astro.props;
 offset ??= 0;
+animationName ??= "colorin";
 ---
 
 {text.split("").map((char : string, i : number) => {
@@ -8,3 +9,25 @@ offset ??= 0;
     const delay = text.slice(0, i).replace(" ", "").length;
     return <h1 class="animated text-nowrap bounce-animation" style={{"animation-delay" : `${(offset + delay)*100}ms`}}>{char}</h1>;
 })}
+
+<style>
+    @keyframes fadein {
+		0% {
+			opacity: 0;
+			translate: 0px 10px;
+			color: #ad6ed1;
+		}
+		75% {
+			translate: 0px -5px;
+			color: white;
+		}
+		100% {
+			opacity: 1;
+			translate: 0px 0px;
+		}
+	}
+
+    h1.animated, h2.animated {
+		animation: 600ms ease-in-out both fadein;
+	}
+</style>
