@@ -1,0 +1,175 @@
+---
+let { link, offset } = Astro.props;
+offset ??= 0;
+---
+
+
+<div class="orbitObject">
+    <div
+        class="bg-white animated"
+        style={{ animationDelay: `${offset * 100}ms, calc(var(--in-time) + ${offset * 100}ms)` }}
+    />
+    <a
+        href={link}
+        target={link.includes(".pdf") ? "_blank" : "_self"}
+        class="self-center bg-purple-950 p-3 rounded-lg animated flex gap-0.5 flex-row justify-center align-middle"
+        style={{ animationDelay: `${offset * 100}ms, calc(var(--in-time) + ${offset * 100}ms)` }}
+    >
+        <slot />
+    </a>
+</div>
+
+<style>
+    @keyframes around {
+		0% {
+			opacity: 0;
+			transform:
+                translate(-50%, -50%)
+                rotate(calc(360deg / var(--num-items) * var(--orbit-index) ))
+                translateY(0)
+                rotate(calc(360deg / var(--num-items) * var(--orbit-index) * -1)) scale(0);
+		}
+
+		50% {
+			opacity: 1;
+		}
+
+		100% {
+			transform:
+                translate(-50%, -50%)
+                rotate(calc(360deg / var(--num-items) * var(--orbit-index) - var(--orbit-degrees)))
+                translateY(min(35vw, 35vh))
+                rotate(calc(var(--orbit-degrees) - 360deg / var(--num-items) * var(--orbit-index))) scale(100%);
+			opacity: 1;
+            
+		}
+	}
+
+	@keyframes continue {
+		0% {
+			transform:
+                translate(-50%, -50%)
+                rotate(calc(360deg / var(--num-items) * var(--orbit-index) - var(--orbit-degrees)))
+                translateY(min(35vw, 35vh))
+                rotate(calc(var(--orbit-degrees) - 360deg / var(--num-items) * var(--orbit-index)));
+		}
+
+		100% {
+			transform:
+                translate(-50%, -50%)
+                rotate(calc(360deg / var(--num-items) * var(--orbit-index) - var(--orbit-degrees) - 360deg))
+                translateY(min(35vw, 35vh))
+                rotate(calc(var(--orbit-degrees) + 360deg - 360deg / var(--num-items) * var(--orbit-index)));
+		}
+	}
+
+	@keyframes aroundLine {
+		0% {
+            height: 0;
+			opacity: 0;
+			transform:
+                rotate(calc(90deg + 360deg / var(--num-items) * var(--orbit-index)))
+                scaleX(0%);
+		}
+
+		50% {
+			opacity: 1;
+		}
+
+		100% {
+			transform:
+                rotate(calc(90deg - var(--orbit-degrees) + 360deg / var(--num-items) * var(--orbit-index)))
+                scaleX(100%);
+            height: 5px;
+		}
+	}
+
+	@keyframes continueLine {
+		0% {
+			transform:
+                rotate(calc(90deg - var(--orbit-degrees) + 360deg / var(--num-items) * var(--orbit-index)))
+                scaleX(100%);
+		}
+
+		100% {
+            transform:
+                rotate(calc(90deg - var(--orbit-degrees) - 360deg + 360deg / var(--num-items) * var(--orbit-index)))
+                scaleX(100%);
+		}
+	}
+
+	.orbitObject a {
+		animation: cubic-bezier(var(--cubic-part), var(--cubic-prop), var(--cubic-part), var(--cubic-prop)) around both, linear continue infinite;
+		animation-delay: 0s, var(--in-time);
+        animation-duration: var(--in-time), var(--out-time);
+	}
+
+	.orbitObject div.bg-white {
+		width: min(35vw, 35vh);
+		height: 5px;
+		
+		transform-origin: left;
+		animation: cubic-bezier(var(--cubic-part), var(--cubic-prop), var(--cubic-part), var(--cubic-prop)) aroundLine both, linear continueLine infinite;
+		animation-delay: 0s, var(--in-time);
+        animation-duration: var(--in-time), var(--out-time);
+
+		mask-image: linear-gradient(to left, rgb(0 0 0 / 100%) 0%, transparent 45%);
+	}
+
+	.orbitObject:nth-child(2) > div, .orbitObject:nth-child(2) > a {
+        --orbit-index: 1;
+	}
+
+    .orbitObject:nth-child(3) > div, .orbitObject:nth-child(3) > a {
+        --orbit-index: 2;
+	}
+
+	.orbitObject {
+        --num-items: 3;
+        --orbit-index: 0;
+
+        --orbit-degrees: 360deg;
+
+        --in-time: 5s;
+        --out-time: 125s;
+
+        --cubic-prop: 0.98;
+        --cubic-part: 0.25;
+    }
+
+
+    .orbitObject * {
+        transition: box-shadow 0.75s, filter 0.75s, background-color 0.75s;
+    }
+
+    .orbitObject:has(~ .orbitObject a:hover) *, .orbitObject:has(> a:hover) ~ .orbitObject *, .orbitObject:has(> a:hover) * {
+        animation-play-state: paused;
+    }
+
+    .orbitObject:has(~ .orbitObject a:hover) a, .orbitObject:has(> a:hover) ~ .orbitObject a {
+        filter: brightness(50%) blur(3px);
+    }
+
+    .orbitObject:has(~ .orbitObject a:hover) div, .orbitObject:has(> a:hover) ~ .orbitObject div {
+        background-color: #292929;
+    }
+
+    .orbitObject:has(> a:hover) a {
+        box-shadow: 0 0 10px #ad6ed1;
+    }
+
+    .orbitObject:has(> a:hover) > div {
+        background-color: #ad6ed1;
+    }
+</style>
+
+<style is:global>
+    #orbitParent a, #orbitParent div {
+		position: absolute;
+		top: 50%;  /* position the top  edge of the element at the middle of the parent */
+		left: 50%; /* position the left edge of the element at the middle of the parent */
+		transform: translate(-50%, -50%);
+	}
+
+    
+</style>

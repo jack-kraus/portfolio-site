@@ -1,0 +1,42 @@
+[
+    {
+        "category" : "Web Development",
+        "list" : [
+            { "text": "HTML" },
+            { "text": "CSS" },
+            { "text": "React" },
+            { "text": "React Native" },
+            { "text": "MongoDB" }, 
+            { "text": "PostgreSQL" },
+            { "text": "Express" },
+            { "text": "Tailwind" },
+            { "text": "Sass" }
+        ]
+    },
+	{
+        "category" : "Programming Languages",
+        "list" : [
+            { "text": "Python" },
+            { "text": "Java" },
+            { "text": "C" },
+            { "text": "C++" },
+            { "text": "JavaScript" },
+            { "text": "Typescript" },
+            { "text": "OCaml" },
+            { "text": "R" }
+        ]
+    },
+	{
+        "category" : "Collaboration",
+        "list" : [
+            { "text": "Github" },
+            { "text": "Gitlab" },
+            { "text": "Slack" },
+            { "text": "Figma" },
+            { "text": "Jira" },
+            { "text": "Microsoft Suite" },
+            { "text": "Google Suite" },
+            { "text": "Photoshop" }
+        ]
+    }
+]

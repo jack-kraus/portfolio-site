@@ -1,19 +1,20 @@
 ---
 const { title, description, image, index, github } = Astro.props;
 import ProjectModal from "./ProjectModal.astro";
+import { Image } from 'astro:assets';
 
 const delayStep = 200;
 const delayOffset = 100 * "Projects".length + 100;
 ---
 
-<div class="project-item aspect-video relative" data-index={index}>
-    <div class="animated w-full h-full" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
-		<div class="bg-purple-500 w-full h-full rounded-lg relative top-0 left-0 front" style={{ backgroundImage: `url(${image})`, backgroundSize: "cover", animationDelay: `${delayOffset + delayStep * index}ms` }}>
+<div class="project-item" data-index={index}>
+    <div class="project-card animated bordered" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
+		<div class="rounded-lg front animated" style={{ backgroundImage: `url(${image})`, backgroundSize: "cover", animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<div class="w-full h-full flex flex-col justify-center align-middle">
 				<h3 class="text-white self-start mx-auto">{title}</h3>
 			</div>
 		</div>
-		<div class="bg-black w-full h-full rounded-lg absolute top-0 left-0 back animated flex flex-col justify-center" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
+		<div class="rounded-lg back animated flex flex-col justify-center" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<img class="bg-cover absolute left-0 top-0 w-full h-full rounded-lg" src={image}>
 			<p class="text-white text-center px-2">{description}</p>
 			<button>go to project</button>
@@ -24,48 +25,90 @@ const delayOffset = 100 * "Projects".length + 100;
 </div>
 
 <style>
-	.project-item > div {
+	/* Project item */
+
+	.project-item {
+		transition: transform 0.75s;
+		transform-origin: center;
+		aspect-ratio: 16 / 9;
+		position: relative;
+	}
+
+	/* Project card */
+
+	.project-card {
 		animation: flipIn 1s;
 		animation-fill-mode: backwards;
+		width: 100%;
+		height: 100%;
 	}
 
-	.project-item div {
-		transition: transform 0.75s, box-shadow 0.25s, z-index 0.75s;
-		transform-origin: center;
+	.project-card {
+		transition: box-shadow 0.25s;
 	}
 
-	.project-item div.back {
-		animation: steps(1) 1s unhide;
-	}
-
-	.project-item:hover > div {
-		transform: perspective(500px) rotate3d(0, 1, 0, 180deg);
-	}
-
-	.project-item:hover div.front {
+	.project-item:hover .project-card {
 		box-shadow: 0 0 10px #ad6ed1;
 	}
 
-	.project-item div.front, .project-item:hover div.back {
+	.project-card {
+		transition: transform 0.75s, box-shadow 0.25s;
+		transform-origin: center;
+	}
+
+	.project-item:hover .project-card.transition-allowed {
+		transform: perspective(500px) rotate3d(0, 1, 0, 180deg);
+	}
+
+	/* Front and Back */
+
+	.back, .front {
+		animation: linear 1s back;
+		transition: z-index 0.75s;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	.front, .project-item:hover .project-card.transition-allowed .back {
 		z-index: 10;
 	}
 
-	.project-item div.back * {
-		scale: -1 1;
-	}
-
-	.project-item div.back, .project-item:hover div.front {
+	.back, .project-item:hover .project-card.transition-allowed .front {
 		z-index: 0;
 	}
 
-	.project-item div div.back img {
+	.back * {
+		scale: -1 1;
+		text-align: center;
+	}
+
+	.back {
+		animation: back 1s;
+	}
+
+	.front {
+		animation: front 1s;
+	}
+
+	.back img {
 		filter: blur(3px) brightness(50%);
 	}
+
+	/* Other */
 
 	h3 {
 		background: radial-gradient(black 0%, rgba(0, 0, 0, 0) 80%);
 		padding: 5px;
 	}
+
+	.bordered {
+		border-radius: 20px;
+	}
+
+	/* Animations */
 
 	@keyframes flipIn {
 		0% {
@@ -77,13 +120,23 @@ const delayOffset = 100 * "Projects".length + 100;
 		}
 	}
 
-	@keyframes unhide {
+	@keyframes front {
 		0% {
-			opacity: 0;
+			z-index: 10;
 		}
 
 		100% {
-			opacity: 1;
+			z-index: 10;
+		}
+	}
+
+	@keyframes back {
+		0% {
+			z-index: 0;
+		}
+
+		100% {
+			z-index: 0;
 		}
 	}
 </style>
@@ -92,7 +145,7 @@ const delayOffset = 100 * "Projects".length + 100;
 	const this_modal = document.querySelector(`.project-modal[data-index="${index}"]`);
 
 	$(`.project-item[data-index="${index}"]`).find("button").on("click", () => {
-		$(this_modal).show();
+		$(this_modal).css("display", "flex");
 		$(`.project-modal:not([data-index="${index}"])`).hide();
 	});
 </script>
