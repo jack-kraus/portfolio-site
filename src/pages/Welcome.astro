@@ -72,9 +72,11 @@ console.log(search);
 	<section id="overview" class="relative">
 		<p>{search}</p>
 		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
-			<OrbitObject link="#projects" text="Projects" offset={firstName.length + lastName.length + 5}/>
-			<OrbitObject link="#skills" text="Skills" offset={firstName.length + lastName.length + 5}/>
-			<OrbitObject link="/" text="Download Resume" offset={firstName.length + lastName.length + 5}/>
+			<OrbitObject link="#projects" offset={firstName.length + lastName.length + 5}>Projects</OrbitObject>
+			<OrbitObject link="#skills" offset={firstName.length + lastName.length + 5}>Skills</OrbitObject>
+			<OrbitObject link="/jackk_resume.pdf" offset={firstName.length + lastName.length + 5}>
+				Resume<span class="material-symbols-outlined inline">download</span>
+			</OrbitObject>
 		</div>
 		<div class="intro align-middle">
 			<div class="z-10">
@@ -110,10 +112,6 @@ console.log(search);
 			</div>)}
 		</div>
 	</section>
-	
-	<section></section>
-	<section></section>
-	<section></section>
 </main>
 
 <style>

@@ -1,5 +1,5 @@
 ---
-let { text, link, offset } = Astro.props;
+let { link, offset } = Astro.props;
 offset ??= 0;
 ---
 
@@ -11,10 +11,11 @@ offset ??= 0;
     />
     <a
         href={link}
-        class="self-center bg-purple-950 p-3 rounded-lg animated"
+        target={link.includes(".pdf") ? "_blank" : "_self"}
+        class="self-center bg-purple-950 p-3 rounded-lg animated flex gap-0.5 flex-row justify-center align-middle"
         style={{ animationDelay: `${offset * 100}ms, calc(var(--in-time) + ${offset * 100}ms)` }}
     >
-        {text}
+        <slot />
     </a>
 </div>
 
