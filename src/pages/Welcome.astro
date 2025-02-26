@@ -2,6 +2,8 @@
 import '@fontsource-variable/fraunces';
 
 import levelerImage from "../assets/leveler.png";
+import miniGolfImage from "../assets/mini_golf.png";
+
 import TextAnimate from '../components/TextAnimate.astro';
 import Project from '../components/project.astro';
 
@@ -19,14 +21,12 @@ interface Project {
 	github : string
 }
 
-console.log(levelerImage.src);
-
 const projects : Project[] = [
-	{ title : "Leveler", description: "a video game review site", image: levelerImage.src, github: "jack-kraus/game-tracker" },
-	{ title : "Harbor Currents", description: "a navigation app", image: levelerImage.src, github: "jack-kraus/game-tracker" },
-	{ title : "Mini Golf", description: "a html5 canvas game", image: levelerImage.src, github: "jack-kraus/Mini-Golf-Game" },
-	{ title : "Job Application Tracker", description: "a tracker for applications", image: levelerImage.src, github: "CS546-Team23/Job-Application-Tracker" },
-	{ title : "Tkinter Minesweeper", description: "a minesweeper game in Python", image: levelerImage.src, github: "jack-kraus/Tkinter-Minesweeper" }
+	{ title : "Leveler", description: "A video game review site", image: levelerImage.src, github: "jack-kraus/game-tracker" },
+	{ title : "Harbor Currents", description: "A navigation app", image: levelerImage.src, github: "jack-kraus/game-tracker" },
+	{ title : "Mini Golf", description: "An html5 canvas game", image: miniGolfImage.src, github: "jack-kraus/Mini-Golf-Game" },
+	{ title : "Job Application Tracker", description: "A tracker for applications", image: levelerImage.src, github: "CS546-Team23/Job-Application-Tracker" },
+	{ title : "Tkinter Minesweeper", description: "A minesweeper game in Python", image: levelerImage.src, github: "jack-kraus/Tkinter-Minesweeper" }
 ];
 
 function range(length : number) {
@@ -46,7 +46,6 @@ const circleDiff = 30;
 
 
 const search = Astro.url.searchParams.get('filter') || '';
-console.log(search);
 ---
 
 <main>
@@ -318,7 +317,6 @@ console.log(search);
 					}
 					else {
 						$(this).addClass("paused");
-						console.log(this);
 					}
 				});
 			}
@@ -349,27 +347,12 @@ console.log(search);
 
 <script>
     const modals = document.getElementsByClassName("project-modal");
-    
-    function currentScrollPercentage(element : Element)
-	{
-        if (!element) return 0;
-		return element.scrollTop / (element.scrollHeight - element.clientHeight);
-	}
 
     for (let i = 0; i < modals.length; i++) {
 		const element = modals[i];
 
-        $(element).find("article").on("scroll", () => {
-            const percent = currentScrollPercentage(element);
-            if (percent < 0.01) $(element).addClass("top").removeClass("bottom");
-            else if (percent > 0.99) $(element).addClass("bottom").removeClass("top");
-            else $(element).removeClass("bottom").removeClass("top");
-        });
-
         $(element).find("button").on("click", () => {
-			$(".project-modal").css("display", "none");;
+			$(".project-modal").animate({ height: "0" }, 500, function() { $(this).css("display", "none"); });
         });
-
-        $(element).hide();
     }
 </script>

@@ -1,7 +1,6 @@
 ---
 const { title, description, image, index, github } = Astro.props;
 import ProjectModal from "./ProjectModal.astro";
-import { Image } from 'astro:assets';
 
 const delayStep = 200;
 const delayOffset = 100 * "Projects".length + 100;
@@ -9,15 +8,15 @@ const delayOffset = 100 * "Projects".length + 100;
 
 <div class="project-item" data-index={index}>
     <div class="project-card animated bordered" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
-		<div class="rounded-lg front animated" style={{ backgroundImage: `url(${image})`, backgroundSize: "cover", animationDelay: `${delayOffset + delayStep * index}ms` }}>
+		<div class="front animated bordered bg-cover" style={{ backgroundImage: `url(${image})`, animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<div class="w-full h-full flex flex-col justify-center align-middle">
 				<h3 class="text-white self-start mx-auto">{title}</h3>
 			</div>
 		</div>
-		<div class="rounded-lg back animated flex flex-col justify-center" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
-			<img class="bg-cover absolute left-0 top-0 w-full h-full rounded-lg" src={image}>
+		<div class="back animated flex flex-col justify-center bordered" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
+			<img class="object-cover absolute left-0 top-0 w-full h-full bordered" src={image}>
 			<p class="text-white text-center px-2">{description}</p>
-			<button>go to project</button>
+			<button class="go-to-project self-center">More info...</button>
 			{github && <a href={`https://github.com/${github}`}>github</a>}
 		</div>
 	</div>
@@ -80,7 +79,7 @@ const delayOffset = 100 * "Projects".length + 100;
 		z-index: 0;
 	}
 
-	.back * {
+	.back *:not(img) {
 		scale: -1 1;
 		text-align: center;
 	}
@@ -95,6 +94,7 @@ const delayOffset = 100 * "Projects".length + 100;
 
 	.back img {
 		filter: blur(3px) brightness(50%);
+		object-position: top;
 	}
 
 	/* Other */
@@ -105,7 +105,27 @@ const delayOffset = 100 * "Projects".length + 100;
 	}
 
 	.bordered {
-		border-radius: 20px;
+		border-radius: 1rem;
+	}
+
+	/* Button */
+
+	.go-to-project {
+		background-image: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 20%) 10%, rgba(255, 255, 255, 20%) 90%, transparent 100%);
+		background-size: 0% 100%;
+		background-repeat: no-repeat;
+		background-position: center;
+		transition: background-size 0.3s;
+
+		padding: 0.1rem 1rem;
+	}
+
+	.go-to-project:hover {
+		background-size: 100% 100%;
+	}
+
+	.go-to-project:active {
+		background-image: linear-gradient(to right, transparent 0%, white 10%, white 90%, transparent 100%);
 	}
 
 	/* Animations */
@@ -144,8 +164,14 @@ const delayOffset = 100 * "Projects".length + 100;
 <script define:vars={{index}}>
 	const this_modal = document.querySelector(`.project-modal[data-index="${index}"]`);
 
-	$(`.project-item[data-index="${index}"]`).find("button").on("click", () => {
-		$(this_modal).css("display", "flex");
-		$(`.project-modal:not([data-index="${index}"])`).hide();
+	$(`.project-item[data-index="${index}"]`).find("button.go-to-project").on("click", function() {
+		$(this_modal)
+			.css("display", "flex")
+			.css("height", "0")
+			.animate({
+				height: "100vh",
+			}, 750);
+
+		// $(`.project-modal:not([data-index="${index}"])`).hide();
 	});
 </script>
