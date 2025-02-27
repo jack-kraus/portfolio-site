@@ -13,11 +13,16 @@ const delayOffset = 100 * "Projects".length + 100;
 				<h3 class="text-white self-start mx-auto">{title}</h3>
 			</div>
 		</div>
-		<div class="back animated flex flex-col justify-center bordered" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
+		<div class="back animated flex flex-col justify-center bordered gap-0.5" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<img class="object-cover absolute left-0 top-0 w-full h-full bordered" src={image}>
 			<p class="text-white text-center px-2">{description}</p>
 			<button class="go-to-project self-center">More info...</button>
-			{github && <a href={`https://github.com/${github}`}>github</a>}
+			{github && <a href={`https://github.com/${github}`} target="_blank" class="self-center flex flex-row justify-center align-middle">
+				github
+				<span class="material-symbols-outlined -scale-x-100">
+					arrow_outward
+				</span>
+			</a>}
 		</div>
 	</div>
 	<ProjectModal github={github} index={index}/>
@@ -93,7 +98,7 @@ const delayOffset = 100 * "Projects".length + 100;
 	}
 
 	.back img {
-		filter: blur(3px) brightness(50%);
+		filter: blur(3px) brightness(35%);
 		object-position: top;
 	}
 
@@ -126,6 +131,38 @@ const delayOffset = 100 * "Projects".length + 100;
 
 	.go-to-project:active {
 		background-image: linear-gradient(to right, transparent 0%, white 10%, white 90%, transparent 100%);
+	}
+
+	/* link */
+
+	a {
+		background-image: linear-gradient(to right, transparent 0%, var(--purple) 10%, var(--purple) 90%, transparent 100%);
+		background-size: 0% 10%;
+		background-repeat: no-repeat;
+		background-position: bottom;
+
+		padding-bottom: 0.25rem;
+	}
+
+	a, a span {
+		transition: background-size 0.3s, color 0.3s;
+	}
+
+	a:hover {
+		background-size: 100% 10%;
+	}
+
+	a:hover span, a:hover {
+		color: var(--purple);
+	}
+
+	a:active {
+		background-image: linear-gradient(to right, transparent 0%, white 10%, white 90%, transparent 100%);
+		color: white;
+	}
+
+	a:active span {
+		color: white;
 	}
 
 	/* Animations */
