@@ -3,7 +3,7 @@ let { text, index } = Astro.props;
 index ??= 0;
 ---
 
-<div class="p-2 rounded-md text-black skill animated" style={{"animation-delay": `${50 * index}ms`}}>
+<div class="p-1.5 rounded-md text-black skill animated" style={{"animation-delay": `${50 * index}ms`}}>
     <p>{text}</p>
 </div>
 
