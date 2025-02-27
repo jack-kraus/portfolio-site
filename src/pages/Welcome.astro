@@ -32,7 +32,7 @@ const projects : Project[] = [
 	{ title : "Harbor Currents", description: "A navigation app", image: harborCurrentsImage.src, gist: "b13f352220d2e8cb5869ca55bd73ef3e/raw" },
 	{ title : "Mini Golf", description: "An html5 canvas game", image: miniGolfImage.src, github: "jack-kraus/Mini-Golf-Game" },
 	{ title : "Job Application Tracker", description: "A tracker for applications", image: jobApplicationTrackerImage.src, github: "CS546-Team23/Job-Application-Tracker" },
-	{ title : "Tkinter Minesweeper", description: "A minesweeper game in Python", image: tkinterMinesweeperImage.src, github: "jack-kraus/Tkinter-Minesweeper" }
+	{ title : "Tkinter Minesweeper", description: "A minesweeper game in Python", image: tkinterMinesweeperImage.src, github: "jack-kraus/Tkinter-Minesweeper" },
 ];
 
 ---
@@ -66,14 +66,16 @@ const projects : Project[] = [
 			<div>
 				<TextAnimate text="Projects"/>
 			</div>
-			<div class="projects-grid object-contain p-5 gap-5 max-w-full stagger">
-				{projects.map((project, index) => <Project
-					title={project.title}
-					description={project.description}
-					image={project.image} index={index}
-					github={project.github}
-					gist={project.gist}
-				/>)}
+			<div class="grid-container max-w-full max-h-full overflow-y-scroll">
+				<div class="projects-grid object-contain">
+					{projects.map((project, index) => <Project
+						title={project.title}
+						description={project.description}
+						image={project.image} index={index}
+						github={project.github}
+						gist={project.gist}
+					/>)}
+				</div>
 			</div>
 		</div> 
 	</section>
@@ -94,42 +96,6 @@ const projects : Project[] = [
 </main>
 
 <style>
-	@keyframes orbit1 {
-		0% {
-			z-index: 10;
-			transform: perspective(2000px) rotate3d(calc(1vw / 1vh), 1, 0, 0deg) translate3d(15vw, -15vw, 0px) rotate3d(calc(1vw / 1vh), 1, 0, 0deg);
-		}
-
-		25% {
-			z-index: 0;
-		}
-
-		50% {
-			z-index: 10;
-		}
-
-		75% {
-			z-index: 20;
-		}
-
-		100% {
-			z-index: 10;
-			transform: perspective(2000px) rotate3d(calc(1vw / 1vh), 1, 0, 360deg) translate3d(15vw, -15vw, 0px) rotate3d(calc(1vw / 1vh), 1, 0, -360deg);
-		}
-	}
-
-	@keyframes fadein {
-		0% {
-			opacity: 0;
-		}
-
-		100% {
-			opacity: 1;
-		}
-	}
-
-
-
 	.blur-svg {
 		filter: brightness(2) contrast(17);
 		background-color: black;
@@ -188,21 +154,34 @@ const projects : Project[] = [
 		}
 	}
 
+	.grid-container {
+		width: 1100px;
+		aspect-ratio: calc(32 * 3) / calc(19 * 2);
+		margin: 2rem;
+	}
+
 	.projects-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		grid-template-rows: repeat(2, 1fr);
-		width: 750px;
 	}
 	
-	@media only screen and (max-width: 800px) {
+	@media only screen and (max-width: 1100px) {
 		.projects-grid {
 			grid-template-columns: repeat(2, 1fr);
-			grid-template-rows: repeat(3, 1fr);
 		}
 
-		#scrollContainer {
-			padding: 1rem;
+		.grid-container {
+			aspect-ratio: calc(32 * 2) / calc(19 * 2);
+		}
+	}
+
+	@media only screen and (max-width: 700px) {
+		.projects-grid {
+			grid-template-columns: repeat(1, 1fr);
+		}
+
+		.grid-container {
+			aspect-ratio: calc(32 * 1) / calc(19 * 2);
 		}
 	}
 
@@ -270,9 +249,11 @@ const projects : Project[] = [
 </style>
 
 <script>
+	$(".grid-container").on("scroll", (e) => {
+		e.stopPropagation();
+	})
 
 	const snapItems = document.querySelectorAll('section');
-
 
 	function resetAnimations() {
 		snapItems.forEach((item) => {
@@ -307,10 +288,8 @@ const projects : Project[] = [
 	}).on("animationstart", function() {
 		$(this).removeClass("transition-allowed");
 	});
-</script>
 
-<script>
-    const modals = document.getElementsByClassName("project-modal");
+	const modals = document.getElementsByClassName("project-modal");
 
     for (let i = 0; i < modals.length; i++) {
 		const element = modals[i];
