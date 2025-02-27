@@ -1,17 +1,21 @@
 ---
-const { github, index } = Astro.props;
+const { github, index, gist } = Astro.props;
 import { marked } from 'marked';
 
-const response = await fetch(`https://raw.githubusercontent.com/${github}/refs/heads/main/README.md`);
-const markdown = await response.text();
-const content = marked.parse(markdown);
+console.log(gist);
+
+const response = github || gist ? await fetch(
+    github ? `https://raw.githubusercontent.com/${github}/refs/heads/main/README.md` : `https://gist.githubusercontent.com/jack-kraus/${gist}`)
+    .then((response) => response.text())
+    .then((response) => marked.parse(response))
+    .catch(() => null) : null;
 ---
 
-<div class="project-modal fixed h-screen w-screen z-50 justify-center align-middle left-0 top-0 bg-black p-10" data-index={index}>
+<div class="project-modal fixed h-screen w-screen z-50 justify-center align-middle left-0 top-0 p-10" data-index={index}>
     <div class="modal w-full h-full rounded-lg flex flex-col">
         <button class="self-end text-4xl">&times;</button>
         <article class="p-10 overflow-scroll bg-zinc-900 rounded-md">
-            <div set:html={content}/>
+            {response ? <div set:html={response}/> : <h1 class="text-red-500">There was an error fetching the markdown for this repository</h1>}
         </article>
     </div>
 </div>
@@ -20,23 +24,19 @@ const content = marked.parse(markdown);
     .project-modal {
         display: none;
     }
+
     article {
-        background-image: linear-gradient(black 0%,rgba(0, 0, 0, 0) 2%, rgba(0, 0, 0, 0) 98%, black 100%);
         transition: background-image;
+        mask-mode: luminance;
+        mask-image: linear-gradient(black 0%,white 2%, white 98%, black 100%);
     }
-
-    article.top {
-        background-image: linear-gradient(rgba(0, 0, 0, 0) 98%, black 100%);
-    }
-
-    article.bottom {
-        background-image: linear-gradient(black 0%,rgba(0, 0, 0, 0) 2%);
-    }
-
 
     article img {
         max-width: 1000px;
+        max-height: 500px;
         display: inline;
+        aspect-ratio: auto;
+        object-fit: contain;
     }
 
     * {
