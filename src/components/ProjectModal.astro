@@ -1,12 +1,14 @@
 ---
-const { github, index } = Astro.props;
+const { github, index, gist } = Astro.props;
 import { marked } from 'marked';
 
-const response = await fetch(`https://raw.githubusercontent.com/${github}/refs/heads/main/README.md`)
+console.log(gist);
+
+const response = github || gist ? await fetch(
+    github ? `https://raw.githubusercontent.com/${github}/refs/heads/main/README.md` : `https://gist.githubusercontent.com/jack-kraus/${gist}`)
     .then((response) => response.text())
     .then((response) => marked.parse(response))
-    .catch(() => null);
-
+    .catch(() => null) : null;
 ---
 
 <div class="project-modal fixed h-screen w-screen z-50 justify-center align-middle left-0 top-0 p-10" data-index={index}>
@@ -24,7 +26,6 @@ const response = await fetch(`https://raw.githubusercontent.com/${github}/refs/h
     }
 
     article {
-        
         transition: background-image;
         mask-mode: luminance;
         mask-image: linear-gradient(black 0%,white 2%, white 98%, black 100%);
@@ -32,7 +33,10 @@ const response = await fetch(`https://raw.githubusercontent.com/${github}/refs/h
 
     article img {
         max-width: 1000px;
+        max-height: 500px;
         display: inline;
+        aspect-ratio: auto;
+        object-fit: contain;
     }
 
     * {

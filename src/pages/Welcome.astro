@@ -7,6 +7,7 @@ import harborCurrentsImage from "../assets/harbor_currents.jpg";
 import jobApplicationTrackerImage from "../assets/job_application_tracker.png";
 import tkinterMinesweeperImage from "../assets/tkinter_minesweeper.png";
 
+
 import TextAnimate from '../components/TextAnimate.astro';
 import Project from '../components/Project.astro';
 
@@ -22,12 +23,12 @@ interface Project {
 	description : string,
 	image : string,
 	github ?: string,
-	markdown ?: string
+	gist ?: string
 }
 
 const projects : Project[] = [
 	{ title : "Leveler", description: "A video game review site", image: levelerImage.src, github: "jack-kraus/game-tracker" },
-	{ title : "Harbor Currents", description: "A navigation app", image: harborCurrentsImage.src, github: "jack-kraus/game-tracker" },
+	{ title : "Harbor Currents", description: "A navigation app", image: harborCurrentsImage.src, gist: "b13f352220d2e8cb5869ca55bd73ef3e/raw" },
 	{ title : "Mini Golf", description: "An html5 canvas game", image: miniGolfImage.src, github: "jack-kraus/Mini-Golf-Game" },
 	{ title : "Job Application Tracker", description: "A tracker for applications", image: jobApplicationTrackerImage.src, github: "CS546-Team23/Job-Application-Tracker" },
 	{ title : "Tkinter Minesweeper", description: "A minesweeper game in Python", image: tkinterMinesweeperImage.src, github: "jack-kraus/Tkinter-Minesweeper" }
@@ -98,6 +99,7 @@ const circleDiff = 30;
 					description={project.description}
 					image={project.image} index={index}
 					github={project.github}
+					gist={project.gist}
 				/>)}
 			</div>
 		</div> 

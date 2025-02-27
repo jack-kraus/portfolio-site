@@ -1,9 +1,10 @@
 ---
-const { title, description, image, index, github } = Astro.props;
+const { title, description, image, index, github, gist } = Astro.props;
 import ProjectModal from "./ProjectModal.astro";
 
 const delayStep = 200;
 const delayOffset = 100 * "Projects".length + 100;
+
 ---
 
 <div class="project-item" data-index={index}>
@@ -25,7 +26,7 @@ const delayOffset = 100 * "Projects".length + 100;
 			</a>}
 		</div>
 	</div>
-	<ProjectModal github={github} index={index}/>
+	<ProjectModal github={github} index={index} gist={gist}/>
 </div>
 
 <style>
@@ -105,8 +106,9 @@ const delayOffset = 100 * "Projects".length + 100;
 	/* Other */
 
 	h3 {
-		background: radial-gradient(black 0%, rgba(0, 0, 0, 0) 80%);
-		padding: 5px;
+		background: radial-gradient(rgba(0, 0, 0, 80%) 25%, rgba(0, 0, 0, 0) 75%);
+		padding: 0.5rem 1.25rem 0.5rem 1.25rem;
+		text-align: center;
 	}
 
 	.bordered {
