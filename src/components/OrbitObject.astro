@@ -38,7 +38,7 @@ offset ??= 0;
 			transform:
                 translate(-50%, -50%)
                 rotate(calc(360deg / var(--num-items) * var(--orbit-index) - var(--orbit-degrees)))
-                translateY(min(35vw, 35vh))
+                translateY(var(--orbit-radius))
                 rotate(calc(var(--orbit-degrees) - 360deg / var(--num-items) * var(--orbit-index))) scale(100%);
 			opacity: 1;
             
@@ -50,7 +50,7 @@ offset ??= 0;
 			transform:
                 translate(-50%, -50%)
                 rotate(calc(360deg / var(--num-items) * var(--orbit-index) - var(--orbit-degrees)))
-                translateY(min(35vw, 35vh))
+                translateY(var(--orbit-radius))
                 rotate(calc(var(--orbit-degrees) - 360deg / var(--num-items) * var(--orbit-index)));
 		}
 
@@ -58,7 +58,7 @@ offset ??= 0;
 			transform:
                 translate(-50%, -50%)
                 rotate(calc(360deg / var(--num-items) * var(--orbit-index) - var(--orbit-degrees) - 360deg))
-                translateY(min(35vw, 35vh))
+                translateY(var(--orbit-radius))
                 rotate(calc(var(--orbit-degrees) + 360deg - 360deg / var(--num-items) * var(--orbit-index)));
 		}
 	}
@@ -127,6 +127,8 @@ offset ??= 0;
 	.orbitObject {
         --num-items: 3;
         --orbit-index: 0;
+
+        --orbit-radius: min(35vw, 35vh);
 
         --orbit-degrees: 360deg;
 

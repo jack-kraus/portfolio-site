@@ -1,80 +1,46 @@
 ---
+// assets
 import '@fontsource-variable/fraunces';
 
-import levelerImage from "../assets/leveler.png";
-import miniGolfImage from "../assets/mini_golf.png";
-import harborCurrentsImage from "../assets/harbor_currents.jpg";
-import jobApplicationTrackerImage from "../assets/job_application_tracker.png";
-import tkinterMinesweeperImage from "../assets/tkinter_minesweeper.png";
-
-
+// components
 import TextAnimate from '../components/TextAnimate.astro';
 import Project from '../components/Project.astro';
-
 import skills from "../data/skills.json";
 import Skill from '../components/Skill.astro';
 import OrbitObject from '../components/OrbitObject.astro';
 import Scrollbar from '../components/Scrollbar.astro';
 
-const firstName = "Jack";
-const lastName = "Kraus";
-
-interface Project {
-	title : string,
-	description : string,
-	image : string,
-	github ?: string,
-	gist ?: string
-}
-
-const projects : Project[] = [
-	{ title : "Leveler", description: "A video game review site", image: levelerImage.src, github: "jack-kraus/game-tracker" },
-	{ title : "Harbor Currents", description: "A navigation app", image: harborCurrentsImage.src, gist: "b13f352220d2e8cb5869ca55bd73ef3e/raw" },
-	{ title : "Mini Golf", description: "An html5 canvas game", image: miniGolfImage.src, github: "jack-kraus/Mini-Golf-Game" },
-	{ title : "Job Application Tracker", description: "A tracker for applications", image: jobApplicationTrackerImage.src, github: "CS546-Team23/Job-Application-Tracker" },
-	{ title : "Tkinter Minesweeper", description: "A minesweeper game in Python", image: tkinterMinesweeperImage.src, github: "jack-kraus/Tkinter-Minesweeper" },
-];
-
+// data
+import { projects } from '../data/projects';
+const name = "Jack Kraus";
 ---
 
 <main>
-	<div id="background" class="fixed w-screen h-screen -z-10">
-	</div>
-
+	<div id="background" class="fixed w-screen h-screen -z-10"/>
 	<Scrollbar/>
 
 	<section id="overview" class="relative">
 		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
-			<OrbitObject link="#projects" offset={firstName.length + lastName.length + 5}>Projects</OrbitObject>
-			<OrbitObject link="#skills" offset={firstName.length + lastName.length + 5}>Skills</OrbitObject>
-			<OrbitObject link="/jackk_resume.pdf" offset={firstName.length + lastName.length + 5}>
+			<OrbitObject link="#projects" offset={name.length + 5}>Projects</OrbitObject>
+			<OrbitObject link="#skills" offset={name.length + 5}>Skills</OrbitObject>
+			<OrbitObject link="/jackk_resume.pdf" offset={name.length + 5}>
 				Resume<span class="material-symbols-outlined inline">download</span>
 			</OrbitObject>
 		</div>
 		<div class="intro align-middle">
-			<div class="z-10">
-				<TextAnimate text={firstName}/>
-				<h1 class="text-nowrap inline">&nbsp;</h1>
-				<TextAnimate text={lastName} offset={firstName.length}/>
-			</div>
-			<h2 class="text-gray-400 animated z-10" style={{"animation-delay" : `${(firstName.length+lastName.length)*100}ms`}}>Software Developer</h2>
+			<TextAnimate text={name}/>
+			<h2 class="text-gray-400 animated z-10" style={{"animation-delay" : `${(name.length)*100}ms`}}>
+				Software Developer
+			</h2>
 		</div>
 	</section>
 
 	<section id="projects">
-		<div class="intro align-middle p-10">
-			<div>
-				<TextAnimate text="Projects"/>
-			</div>
+		<div class="intro align-middle">
+			<TextAnimate text="Projects"/>
 			<div class="grid-container max-w-full max-h-full overflow-y-scroll">
 				<div class="projects-grid object-contain">
-					{projects.map((project, index) => <Project
-						title={project.title}
-						description={project.description}
-						image={project.image} index={index}
-						github={project.github}
-						gist={project.gist}
-					/>)}
+					{projects.map((project, index) => <Project {...project} index={index}/>)}
 				</div>
 			</div>
 		</div> 
@@ -82,9 +48,7 @@ const projects : Project[] = [
 	
 	<section id="skills">
 		<div class="intro align-middle">
-			<div>
-				<TextAnimate text="Skills"/>
-			</div>
+			<TextAnimate text="Skills"/>
 			{skills.map(({ category, list }, index) => <div class="flex flex-col align-middle justify-center">
 				<h2 class="text-gray-400 animated z-10 text-center" style={{"animation-delay" : `${("Skills".length + index) * 100}ms`}}>{category}</h2>
 				<div class="flex gap-2 flex-wrap justify-center">
@@ -96,16 +60,6 @@ const projects : Project[] = [
 </main>
 
 <style>
-	.blur-svg {
-		filter: brightness(2) contrast(17);
-		background-color: black;
-		margin: 20px;
-	}
-
-	.blur-svg circle {
-		filter: blur(2px);
-	}
-
 	body {
 		background-color: black;
 		height: 1000px;
@@ -137,8 +91,6 @@ const projects : Project[] = [
 	.three {
 		animation: orbitIn 2s ease-in-out, orbitOut 2s ease-in-out;
 	}
-
-	
 
 	@keyframes fadein {
 		0% {
@@ -248,6 +200,10 @@ const projects : Project[] = [
 </style>
 
 <script>
+	$(window).on("resize", () => {
+		$(".orbitObject").css("--orbit-radius", Math.min(window.innerWidth * 0.35, window.innerHeight * 0.35) + 'px');
+	});
+
 	$(".grid-container").on("scroll", (e) => {
 		e.stopPropagation();
 	})

@@ -2,8 +2,6 @@
 const { github, index, gist } = Astro.props;
 import { marked } from 'marked';
 
-console.log(gist);
-
 const response = github || gist ? await fetch(
     github ? `https://raw.githubusercontent.com/${github}/refs/heads/main/README.md` : `https://gist.githubusercontent.com/jack-kraus/${gist}`)
     .then((response) => response.text())

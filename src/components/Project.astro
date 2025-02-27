@@ -4,7 +4,6 @@ import ProjectModal from "./ProjectModal.astro";
 
 const delayStep = 200;
 const delayOffset = 100 * "Projects".length + 100;
-
 ---
 
 <div class="project-item" data-index={index}>
@@ -15,7 +14,7 @@ const delayOffset = 100 * "Projects".length + 100;
 			</div>
 		</div>
 		<div class="back animated flex flex-col justify-center bordered gap-0.5" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
-			<img class="object-cover absolute left-0 top-0 w-full h-full bordered" src={image}>
+			<img class="object-cover absolute left-0 top-0 w-full h-full bordered" src={image} alt={`${title} project`}>
 			<p class="text-white text-center px-2">{description}</p>
 			<button class="go-to-project self-center">More info...</button>
 			{github && <a href={`https://github.com/${github}`} target="_blank" class="self-center flex flex-row justify-center align-middle">
