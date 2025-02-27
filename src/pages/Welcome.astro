@@ -14,6 +14,7 @@ import Project from '../components/Project.astro';
 import skills from "../data/skills.json";
 import Skill from '../components/Skill.astro';
 import OrbitObject from '../components/OrbitObject.astro';
+import Scrollbar from '../components/Scrollbar.astro';
 
 const firstName = "Jack";
 const lastName = "Kraus";
@@ -34,41 +35,13 @@ const projects : Project[] = [
 	{ title : "Tkinter Minesweeper", description: "A minesweeper game in Python", image: tkinterMinesweeperImage.src, github: "jack-kraus/Tkinter-Minesweeper" }
 ];
 
-function range(length : number) {
-	let i = length;
-	const out = [];
-	while (i > -length) {
-		out.push(i);
-		i--;
-	}
-	return out;
-}
-
-const circleLength = 15;
-const circleMaxWidth = 10;
-const circleMinWidth = 3;
-const circleDiff = 30;
 ---
 
 <main>
 	<div id="background" class="fixed w-screen h-screen -z-10">
 	</div>
 
-	<div class="fixed h-screen top-0 left-0" id="scrollContainer" class="-z-10">
-		<svg width={circleMaxWidth+5} height="100%" class="blur-svg">
-			{range(circleLength).map((i) => {
-				const circleDimension = (circleMaxWidth - circleMinWidth) * 0.5 * (Math.cos(i * Math.PI / circleLength) + 1) + circleMinWidth;
-				return <circle
-					r={circleDimension / 2}
-					cx={circleMaxWidth / 2 + 2.5}
-					cy={circleDiff * i / circleLength + circleDiff}
-					class="circles"
-					fill={`white`}
-					style={{"transition-duration": `${0.05 + Math.abs(i) / circleLength * 0.05}s`}}
-				/>;
-			})}
-		</svg>
-	</div>
+	<Scrollbar/>
 
 	<section id="overview" class="relative">
 		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
@@ -155,10 +128,7 @@ const circleDiff = 30;
 		}
 	}
 
-	#scrollContainer {
-		padding: 3rem;
-		transition: padding 0.2s ease-out;
-	}
+
 
 	.blur-svg {
 		filter: brightness(2) contrast(17);
@@ -299,15 +269,9 @@ const circleDiff = 30;
 	}
 </style>
 
-<script define:vars={{circleLength, circleMinWidth, circleMaxWidth, circleDiff}}>
-
-	function currentScrollPercentage()
-	{
-		return (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
-	}
+<script>
 
 	const snapItems = document.querySelectorAll('section');
-	const circleItems = document.getElementsByTagName('circle');
 
 
 	function resetAnimations() {
@@ -336,15 +300,6 @@ const circleDiff = 30;
 
 	window.addEventListener('scroll', () => {
 		resetAnimations();
-
-		// TODO: Do on screen resize too, and on load
-		Array.from(circleItems).forEach((item) => {
-			const ratio = currentScrollPercentage();
-			const { height } = item.getBoundingClientRect();
-			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
-			const topTarget = heightSpace * ratio;
-			item.style.transform = `translate(0px, ${topTarget}px)`;
-		});
 	});
 
 	$(".project-card").on("animationend", function() {

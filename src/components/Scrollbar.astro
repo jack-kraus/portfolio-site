@@ -1,0 +1,57 @@
+---
+function range(length : number) {
+	let i = length;
+	const out = [];
+	while (i > -length) {
+		out.push(i);
+		i--;
+	}
+	return out;
+}
+
+const circleLength = 15;
+const circleMaxWidth = 10;
+const circleMinWidth = 3;
+const circleDiff = 30;
+---
+
+<div class="fixed h-screen top-0 left-0" id="scrollContainer" class="-z-10">
+    <svg width={circleMaxWidth+5} height="100%" class="blur-svg">
+        {range(circleLength).map((i) => {
+            const circleDimension = (circleMaxWidth - circleMinWidth) * 0.5 * (Math.cos(i * Math.PI / circleLength) + 1) + circleMinWidth;
+            return <circle
+                r={circleDimension / 2}
+                cx={circleMaxWidth / 2 + 2.5}
+                cy={circleDiff * i / circleLength + circleDiff}
+                class="circles"
+                fill={`white`}
+                style={{"transition-duration": `${0.05 + Math.abs(i) / circleLength * 0.05}s`}}
+            />;
+        })}
+    </svg>
+</div>
+
+<script define:vars={{circleLength, circleMinWidth, circleMaxWidth, circleDiff}}>
+    function currentScrollPercentage()
+	{
+		return (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+	}
+    const circleItems = document.getElementsByTagName('circle');
+    window.addEventListener('scroll', () => {
+		// TODO: Do on screen resize too, and on load
+		Array.from(circleItems).forEach((item) => {
+			const ratio = currentScrollPercentage();
+			const { height } = item.getBoundingClientRect();
+			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
+			const topTarget = heightSpace * ratio;
+			item.style.transform = `translate(0px, ${topTarget}px)`;
+		});
+	});
+</script>
+
+<style>
+    #scrollContainer {
+		padding: 2%;
+		transition: padding 0.2s ease-out;
+	}
+</style>
