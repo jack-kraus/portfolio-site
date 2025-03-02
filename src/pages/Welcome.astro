@@ -136,12 +136,14 @@ const name = "Jack Kraus";
 		.grid-container {
 			--rows: 1;
 		}
-	}
 
-	@media (aspect-ratio < 1) {
 		.skill-container {
 			flex-direction: row;
 			justify-content: space-between;
+		}
+
+		.skill-container div {
+			justify-content: flex-end;
 		}
 	}
 </style>
@@ -262,4 +264,6 @@ const name = "Jack Kraus";
 			$(".project-modal").animate({ height: "0" }, 500, function() { $(this).css("display", "none"); });
         });
     }
+
+	$(".touchable").on("touchstart", () => {});
 </script>
