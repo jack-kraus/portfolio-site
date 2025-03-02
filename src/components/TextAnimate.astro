@@ -1,14 +1,33 @@
 ---
-let { text, offset, animationName } = Astro.props;
+let { text, offset } = Astro.props;
 offset ??= 0;
-animationName ??= "colorin";
+
+const interleave = (arr : any[], item: any) => {
+	const outArray = [];
+	for (let i = 0; i < arr.length; i++) {
+		outArray.push(arr[i]);
+		if (i < arr.length - 1) {
+			outArray.push(item);
+		}
+	}
+	return outArray;
+}
+
+const words = text.split(" ");
+const wordLengths = words.map((item : string) => item.length);
 ---
 
-<div>
-	{text.split("").map((char : string, i : number) => {
-		if (char === " ") return <h1 class="text-nowrap">&nbsp;</h1>;
-		const delay = text.slice(0, i).replace(" ", "").length;
-		return <h1 class="animated text-nowrap bounce-animation" style={{"animation-delay" : `${(offset + delay)*100}ms`}}>{char}</h1>;
+<div class="flex flex-row flex-wrap justify-center gap-3 p-5">
+	{text.split(" ").map((word : string, i : number) => {
+		const delayOuter = wordLengths.slice(0, i).reduce((partial : number, a : number) => partial + a, 0);
+		return <div class="inline">
+			{
+				word.split("").map((char : string, j : number) => {
+					const delay = delayOuter + j;
+					return <h1 class="animated text-nowrap" style={{"animation-delay" : `${(offset + delay)*100}ms`}}>{char}</h1>;
+				})
+			}
+		</div>
 	})}
 </div>
 
@@ -31,6 +50,9 @@ animationName ??= "colorin";
     h1.animated, h2.animated {
 		animation: 600ms ease-in-out both fadein;
 		transition: color 500ms;
+		margin: 0;
+		padding: 0;
+		line-height: 1;
 	}
 	
 	h1.animated:hover, h2.animated:hover {
