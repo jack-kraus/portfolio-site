@@ -213,16 +213,15 @@ const name = "Jack Kraus";
 </style>
 
 <script>
+	// Reset orbit radius on resize, makes sure lines of orbiting items stays correct
 	$(window).on("resize", () => {
 		$(".orbitObject").css("--orbit-radius", Math.min(window.innerWidth * 0.35, window.innerHeight * 0.35) + 'px');
 	});
 
-	$(".grid-container").on("scroll", (e) => {
-		e.stopPropagation();
-	})
-
+	// each section is one screen height
 	const snapItems = document.querySelectorAll('section');
 
+	// get every "animated" element and reset its animation if it's within the currently scrolled item
 	function resetAnimations() {
 		snapItems.forEach((item) => {
 			const rect = item.getBoundingClientRect();
@@ -245,20 +244,23 @@ const name = "Jack Kraus";
 		});
 	}
 
+	// reset on start
 	resetAnimations();
 
-	$("#scroll-container").on('scroll', (e) => {
+	// reset on scroll
+	$("#scroll-container").on('scroll', () => {
 		resetAnimations();
 	});
 
+	// allow projects to turn around when an animation is not playing
 	$(".project-card").on("animationend", function() {
 		$(this).addClass("transition-allowed");
 	}).on("animationstart", function() {
 		$(this).removeClass("transition-allowed");
 	});
 
+	// find all the project modals, and set the button within it to animate the modal closed
 	const modals = document.getElementsByClassName("project-modal");
-
     for (let i = 0; i < modals.length; i++) {
 		const element = modals[i];
 
@@ -267,5 +269,6 @@ const name = "Jack Kraus";
         });
     }
 
+	// allows touch events
 	$(".touchable").on("touchstart", () => {});
 </script>

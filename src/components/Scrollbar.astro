@@ -31,7 +31,8 @@ const circleDiff = 30;
 </div>
 
 <script define:vars={{circleLength, circleMinWidth, circleMaxWidth, circleDiff}}>
-    function currentScrollPercentage()
+    // get percentage scrolled of scroll container
+	function currentScrollPercentage()
 	{
 		const scrollableElement = document.getElementById('scroll-container');
 		const scrollTop = scrollableElement.scrollTop;
@@ -42,6 +43,7 @@ const circleDiff = 30;
 
     const circleItems = document.getElementsByTagName('circle');
 	
+	// animate all circles on scroll
     $("#scroll-container").on('scroll', () => {
 		// TODO: Do on screen resize too, and on load
 		Array.from(circleItems).forEach((item) => {
