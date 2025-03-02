@@ -1,120 +1,79 @@
 ---
+// assets
 import '@fontsource-variable/fraunces';
 
-import levelerImage from "../assets/leveler.png";
-import miniGolfImage from "../assets/mini_golf.png";
-import harborCurrentsImage from "../assets/harbor_currents.jpg";
-import jobApplicationTrackerImage from "../assets/job_application_tracker.png";
-import tkinterMinesweeperImage from "../assets/tkinter_minesweeper.png";
-
-
+// components
 import TextAnimate from '../components/TextAnimate.astro';
 import Project from '../components/Project.astro';
-
 import skills from "../data/skills.json";
 import Skill from '../components/Skill.astro';
 import OrbitObject from '../components/OrbitObject.astro';
 import Scrollbar from '../components/Scrollbar.astro';
 
-const firstName = "Jack";
-const lastName = "Kraus";
-
-interface Project {
-	title : string,
-	description : string,
-	image : string,
-	github ?: string,
-	gist ?: string
-}
-
-const projects : Project[] = [
-	{ title : "Leveler", description: "A video game review site", image: levelerImage.src, github: "jack-kraus/game-tracker" },
-	{ title : "Harbor Currents", description: "A navigation app", image: harborCurrentsImage.src, gist: "b13f352220d2e8cb5869ca55bd73ef3e/raw" },
-	{ title : "Mini Golf", description: "An html5 canvas game", image: miniGolfImage.src, github: "jack-kraus/Mini-Golf-Game" },
-	{ title : "Job Application Tracker", description: "A tracker for applications", image: jobApplicationTrackerImage.src, github: "CS546-Team23/Job-Application-Tracker" },
-	{ title : "Tkinter Minesweeper", description: "A minesweeper game in Python", image: tkinterMinesweeperImage.src, github: "jack-kraus/Tkinter-Minesweeper" },
-];
-
+// data
+import { projects } from '../data/projects';
+const name = "Jack Kraus";
 ---
 
-<main>
-	<div id="background" class="fixed w-screen h-screen -z-10">
-	</div>
-
+<div id="scroll-container">
 	<Scrollbar/>
 
-	<section id="overview" class="relative">
-		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
-			<OrbitObject link="#projects" offset={firstName.length + lastName.length + 5}>Projects</OrbitObject>
-			<OrbitObject link="#skills" offset={firstName.length + lastName.length + 5}>Skills</OrbitObject>
-			<OrbitObject link="/jackk_resume.pdf" offset={firstName.length + lastName.length + 5}>
-				Resume<span class="material-symbols-outlined inline">download</span>
-			</OrbitObject>
-		</div>
-		<div class="intro align-middle">
-			<div class="z-10">
-				<TextAnimate text={firstName}/>
-				<h1 class="text-nowrap inline">&nbsp;</h1>
-				<TextAnimate text={lastName} offset={firstName.length}/>
+	<main>
+		<section id="overview" class="relative">
+			<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
+				<OrbitObject link="#projects" offset={name.length + 5}>Projects</OrbitObject>
+				<OrbitObject link="#skills" offset={name.length + 5}>Skills</OrbitObject>
+				<OrbitObject link="/jackk_resume.pdf" offset={name.length + 5}>
+					Resume<span class="material-symbols-outlined inline">download</span>
+				</OrbitObject>
 			</div>
-			<h2 class="text-gray-400 animated z-10" style={{"animation-delay" : `${(firstName.length+lastName.length)*100}ms`}}>Software Developer</h2>
-		</div>
-	</section>
+			<div class="intro align-middle">
+				<TextAnimate text={name}/>
+				<h2 class="text-gray-400 animated z-10" style={{"animation-delay" : `${(name.length)*100}ms`}}>
+					Software Developer
+				</h2>
+			</div>
+		</section>
 
-	<section id="projects">
-		<div class="intro align-middle p-10">
-			<div>
+		<section id="projects">
+			<div class="intro align-middle">
 				<TextAnimate text="Projects"/>
-			</div>
-			<div class="grid-container max-w-full max-h-full overflow-y-scroll">
-				<div class="projects-grid object-contain">
-					{projects.map((project, index) => <Project
-						title={project.title}
-						description={project.description}
-						image={project.image} index={index}
-						github={project.github}
-						gist={project.gist}
-					/>)}
+				<div class="grid-container max-w-full max-h-full overflow-y-scroll">
+					<div class="projects-grid object-contain">
+						{projects.map((project, index) => <Project {...project} index={index}/>)}
+					</div>
 				</div>
-			</div>
-		</div> 
-	</section>
-	
-	<section id="skills">
-		<div class="intro align-middle">
-			<div>
+			</div> 
+		</section>
+		
+		<section id="skills">
+			<div class="intro align-middle">
 				<TextAnimate text="Skills"/>
-			</div>
-			{skills.map(({ category, list }, index) => <div class="flex flex-col align-middle justify-center">
-				<h2 class="text-gray-400 animated z-10 text-center" style={{"animation-delay" : `${("Skills".length + index) * 100}ms`}}>{category}</h2>
-				<div class="flex gap-2 flex-wrap justify-center">
-					{list.map((item : any, i) => <Skill text={item.text} index={i} filterable={item.filterable}/>)}
+				<div class="flex flex-col gap-3">
+					{skills.map(({ category, list }, index) => <div class="flex flex-col align-middle justify-center skill-container">
+						<h2 class="text-gray-400 animated z-10 m-3 self-center text-left" style={{"animation-delay" : `${("Skills".length + index) * 100}ms`}}>{category}</h2>
+						<div class="flex gap-2 flex-wrap justify-center">
+							{list.map((item : any, i) => <Skill text={item.text} index={i} filterable={item.filterable}/>)}
+						</div>
+					</div>)}
 				</div>
-			</div>)}
-		</div>
-	</section>
-</main>
+			</div>
+		</section>
+	</main>
+</div>
 
 <style>
-	.blur-svg {
-		filter: brightness(2) contrast(17);
-		background-color: black;
-		margin: 20px;
+	.skill-container {
+		flex-direction: column;
 	}
 
-	.blur-svg circle {
-		filter: blur(2px);
-	}
-
-	body {
-		background-color: black;
-		height: 1000px;
-	}
-
-	#circle {
-		top: 0px;
-		transition: top linear;
-		transition-duration: 0.1s;
+	#scroll-container {
+		height: 100svh;
+		overflow-y: scroll;
+		scroll-snap-type: y mandatory;
+		margin: 0;
+		padding: 0;
+		border: 0;
 	}
 
 	.intro {
@@ -129,7 +88,7 @@ const projects : Project[] = [
 
 	section {
 		width: 100%;
-		height: 100vh;
+		height: 100svh;
 		scroll-snap-align: center;
 		padding: 40px;
 	}
@@ -137,8 +96,6 @@ const projects : Project[] = [
 	.three {
 		animation: orbitIn 2s ease-in-out, orbitOut 2s ease-in-out;
 	}
-
-	
 
 	@keyframes fadein {
 		0% {
@@ -155,37 +112,43 @@ const projects : Project[] = [
 	}
 
 	.grid-container {
+		--columns: 3;
+		--rows: 2;
 		width: 1100px;
-		aspect-ratio: calc(32 * 3) / calc(19 * 2);
+		aspect-ratio: calc(32 * var(--columns)) / calc(19 * var(--rows));
+		scroll-snap-type: y proximity;
 	}
 
 	.projects-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(var(--columns), 1fr);
 	}
 	
-	@media only screen and (max-width: 1100px) {
-		.projects-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-
+	@media only screen and (max-width: 1000px) {
 		.grid-container {
-			aspect-ratio: calc(32 * 2) / calc(19 * 2);
+			--columns: 2;
 		}
 	}
 
-	@media only screen and (max-width: 700px) {
-		.projects-grid {
-			grid-template-columns: repeat(1, 1fr);
-		}
-
+	@media only screen and (max-width: 525px) {
 		.grid-container {
-			aspect-ratio: calc(32 * 1) / calc(19 * 2);
+			--columns: 1;
 		}
 	}
 
-	#background {
-		background: radial-gradient(#160f2e 0%, #000000 70%);
+	@media only screen and (max-height: 600px) {
+		.grid-container {
+			--rows: 1;
+		}
+
+		.skill-container {
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		.skill-container div {
+			justify-content: flex-end;
+		}
 	}
 </style>
 
@@ -198,17 +161,18 @@ const projects : Project[] = [
 		--purple: #ad6ed1;
 	}
 
-	.notransition {
-		-webkit-transition: none !important;
-		-moz-transition: none !important;
-		-o-transition: none !important;
-		transition: none !important;
-	}
-
 	.overlap {
 		position: absolute;
 		top: 0;
 		left: 0;
+	}
+
+	h1, h2, h3, p, button, li, div {
+		font-family: 'Fraunces Variable', serif;
+	}
+
+	h2.animated {
+		animation: fadein 600ms ease-in-out both;
 	}
 
 	h1 {
@@ -218,17 +182,8 @@ const projects : Project[] = [
 		font-weight: 700;
 	}
 
-	h1, h2, h3, p, button, li, div {
-		font-family: 'Fraunces Variable', serif;
-		transition: font-size 0.1s ease-out;
-	}
-
-	h2.animated {
-		animation: fadein 600ms ease-in-out both;
-	}
-
 	h2 {
-		font-size: 2.5rem;
+		font-size: 2rem;
 		font-weight: 300;
 	}
 
@@ -236,24 +191,37 @@ const projects : Project[] = [
 		font-weight: 300;
 	}
 
-	@media only screen and (max-width: 700px) {
+	@media only screen and (max-width: 1100px) {
 		h1 {
-			font-size: 3.5rem;
+			font-size: 4rem;
 		}
 
 		h2 {
 			font-size: 1.5rem;
 		}
 	}
+
+	@media only screen and ((max-width: 525px) or (max-height: 525px)) {
+		h1 {
+			font-size: 2.5rem;
+		}
+
+		h2 {
+			font-size: 1rem;
+		}
+	}
 </style>
 
 <script>
-	$(".grid-container").on("scroll", (e) => {
-		e.stopPropagation();
-	})
+	// Reset orbit radius on resize, makes sure lines of orbiting items stays correct
+	$(window).on("resize", () => {
+		$(".orbitObject").css("--orbit-radius", Math.min(window.innerWidth * 0.35, window.innerHeight * 0.35) + 'px');
+	});
 
+	// each section is one screen height
 	const snapItems = document.querySelectorAll('section');
 
+	// get every "animated" element and reset its animation if it's within the currently scrolled item
 	function resetAnimations() {
 		snapItems.forEach((item) => {
 			const rect = item.getBoundingClientRect();
@@ -276,20 +244,23 @@ const projects : Project[] = [
 		});
 	}
 
+	// reset on start
 	resetAnimations();
 
-	window.addEventListener('scroll', () => {
+	// reset on scroll
+	$("#scroll-container").on('scroll', () => {
 		resetAnimations();
 	});
 
+	// allow projects to turn around when an animation is not playing
 	$(".project-card").on("animationend", function() {
 		$(this).addClass("transition-allowed");
 	}).on("animationstart", function() {
 		$(this).removeClass("transition-allowed");
 	});
 
+	// find all the project modals, and set the button within it to animate the modal closed
 	const modals = document.getElementsByClassName("project-modal");
-
     for (let i = 0; i < modals.length; i++) {
 		const element = modals[i];
 
@@ -297,4 +268,7 @@ const projects : Project[] = [
 			$(".project-modal").animate({ height: "0" }, 500, function() { $(this).css("display", "none"); });
         });
     }
+
+	// allows touch events
+	$(".touchable").on("touchstart", () => {});
 </script>

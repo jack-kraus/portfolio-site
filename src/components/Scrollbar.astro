@@ -11,11 +11,11 @@ function range(length : number) {
 
 const circleLength = 15;
 const circleMaxWidth = 10;
-const circleMinWidth = 3;
+const circleMinWidth = 5;
 const circleDiff = 30;
 ---
 
-<div class="fixed h-screen top-0 left-0" id="scrollContainer" class="-z-10">
+<div class="fixed h-screen top-0 left-0" id="bar-container" class="-z-10">
     <svg width={circleMaxWidth+5} height="100%" class="blur-svg">
         {range(circleLength).map((i) => {
             const circleDimension = (circleMaxWidth - circleMinWidth) * 0.5 * (Math.cos(i * Math.PI / circleLength) + 1) + circleMinWidth;
@@ -23,7 +23,6 @@ const circleDiff = 30;
                 r={circleDimension / 2}
                 cx={circleMaxWidth / 2 + 2.5}
                 cy={circleDiff * i / circleLength + circleDiff}
-                class="circles"
                 fill={`white`}
                 style={{"transition-duration": `${0.05 + Math.abs(i) / circleLength * 0.05}s`}}
             />;
@@ -32,16 +31,24 @@ const circleDiff = 30;
 </div>
 
 <script define:vars={{circleLength, circleMinWidth, circleMaxWidth, circleDiff}}>
-    function currentScrollPercentage()
+    // get percentage scrolled of scroll container
+	function currentScrollPercentage()
 	{
-		return (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+		const scrollableElement = document.getElementById('scroll-container');
+		const scrollTop = scrollableElement.scrollTop;
+  		const scrollHeight = scrollableElement.scrollHeight;
+  		const clientHeight = scrollableElement.clientHeight;
+      	return (scrollTop / (scrollHeight - clientHeight));
 	}
+
     const circleItems = document.getElementsByTagName('circle');
-    window.addEventListener('scroll', () => {
+	
+	// animate all circles on scroll
+    $("#scroll-container").on('scroll', () => {
 		// TODO: Do on screen resize too, and on load
 		Array.from(circleItems).forEach((item) => {
 			const ratio = currentScrollPercentage();
-			const { height } = item.getBoundingClientRect();
+			const height = parseFloat(item.getAttribute("r"));
 			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
 			const topTarget = heightSpace * ratio;
 			item.style.transform = `translate(0px, ${topTarget}px)`;
@@ -50,8 +57,19 @@ const circleDiff = 30;
 </script>
 
 <style>
-    #scrollContainer {
-		padding: 2%;
-		transition: padding 0.2s ease-out;
+    #bar-container {
+		padding: 1.5%;
+		transition: padding 0.1s ease-out;
+	}
+
+	.blur-svg {
+		filter: brightness(2) contrast(17);
+		background-color: black;
+		height: 100%;
+	}
+
+	.blur-svg circle {
+		filter: blur(2px);
+		transition-property: transform 0.2s;
 	}
 </style>
