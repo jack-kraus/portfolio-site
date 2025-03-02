@@ -1,6 +1,7 @@
 ---
 const { github, index, gist } = Astro.props;
 import { marked } from 'marked';
+import ExitButton from './ExitButton.astro';
 
 const response = github || gist ? await fetch(
     github ? `https://raw.githubusercontent.com/${github}/refs/heads/main/README.md` : `https://gist.githubusercontent.com/jack-kraus/${gist}`)
@@ -11,7 +12,7 @@ const response = github || gist ? await fetch(
 
 <div class="project-modal fixed h-screen w-screen z-50 justify-center align-middle left-0 top-0 p-10" data-index={index}>
     <div class="modal w-full h-full rounded-lg flex flex-col">
-        <button class="self-end text-4xl">&times;</button>
+        <ExitButton/>
         <article class="p-10 overflow-scroll bg-zinc-900 rounded-md">
             {response ? <div set:html={response}/> : <h1 class="text-red-500">There was an error fetching the markdown for this repository</h1>}
         </article>

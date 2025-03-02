@@ -16,9 +16,8 @@ const name = "Jack Kraus";
 ---
 
 <div id="scroll-container">
+	<Scrollbar/>
 	<main>
-		<Scrollbar/>
-
 		<section id="overview" class="relative">
 			<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
 				<OrbitObject link="#projects" offset={name.length + 5}>Projects</OrbitObject>
@@ -113,6 +112,7 @@ const name = "Jack Kraus";
 		--rows: 2;
 		width: 1100px;
 		aspect-ratio: calc(32 * var(--columns)) / calc(19 * var(--rows));
+		scroll-snap-type: y proximity;
 	}
 
 	.projects-grid {
@@ -136,7 +136,9 @@ const name = "Jack Kraus";
 		.grid-container {
 			--rows: 1;
 		}
+	}
 
+	@media (aspect-ratio < 1) {
 		.skill-container {
 			flex-direction: row;
 			justify-content: space-between;
@@ -241,7 +243,7 @@ const name = "Jack Kraus";
 
 	resetAnimations();
 
-	$("#scroll-container").on('scroll', () => {
+	$("#scroll-container").on('scroll', (e) => {
 		resetAnimations();
 	});
 

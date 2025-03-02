@@ -6,7 +6,7 @@ const delayStep = 200;
 const delayOffset = 100 * "Projects".length + 100;
 ---
 
-<div class="project-item" data-index={index}>
+<div class="project-item snap-start" data-index={index}>
     <div class="project-card animated bordered" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
 		<div class="front animated bordered bg-cover" style={{ backgroundImage: `url(${image})`, animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<div class="w-full h-full flex flex-col justify-center align-middle">
@@ -61,10 +61,9 @@ const delayOffset = 100 * "Projects".length + 100;
 	.project-card {
 		animation: flipIn 1s;
 		animation-fill-mode: backwards;
-		max-width: 100%;
 		height: 100%;
 		transform: translateZ(0); /* Forces GPU rendering */
-		box-sizing: content-box;
+		box-sizing: border-box;
 	}
 
 	.project-card {

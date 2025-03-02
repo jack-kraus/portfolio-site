@@ -11,7 +11,7 @@ function range(length : number) {
 
 const circleLength = 15;
 const circleMaxWidth = 10;
-const circleMinWidth = 3;
+const circleMinWidth = 5;
 const circleDiff = 30;
 ---
 
@@ -23,7 +23,6 @@ const circleDiff = 30;
                 r={circleDimension / 2}
                 cx={circleMaxWidth / 2 + 2.5}
                 cy={circleDiff * i / circleLength + circleDiff}
-                class="circles"
                 fill={`white`}
                 style={{"transition-duration": `${0.05 + Math.abs(i) / circleLength * 0.05}s`}}
             />;
@@ -47,7 +46,7 @@ const circleDiff = 30;
 		// TODO: Do on screen resize too, and on load
 		Array.from(circleItems).forEach((item) => {
 			const ratio = currentScrollPercentage();
-			const { height } = item.getBoundingClientRect();
+			const height = parseFloat(item.getAttribute("r"));
 			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
 			const topTarget = heightSpace * ratio;
 			item.style.transform = `translate(0px, ${topTarget}px)`;
@@ -58,6 +57,18 @@ const circleDiff = 30;
 <style>
     #scrollContainer {
 		padding: 2%;
-		transition: padding 0.5s ease-out;
+		transition: padding 0.1s ease-out;
+		box-sizing: border-box;
+	}
+
+	.blur-svg {
+		filter: brightness(2) contrast(17);
+		background-color: black;
+		margin: 20px;
+	}
+
+	.blur-svg circle {
+		filter: blur(2px);
+		transition-property: transform 0.2s;
 	}
 </style>
