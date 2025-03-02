@@ -34,13 +34,19 @@ const circleDiff = 30;
 <script define:vars={{circleLength, circleMinWidth, circleMaxWidth, circleDiff}}>
     function currentScrollPercentage()
 	{
-		return (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+		const scroller = document.getElementById('scrollContainer');
+		let height = scroller.clientHeight;
+      	let scrollHeight = scroller.scrollHeight - height;
+      	let scrollTop = scroller.scrollTop;
+      	return Math.floor(scrollTop / scrollHeight);
 	}
+
     const circleItems = document.getElementsByTagName('circle');
-    window.addEventListener('scroll', () => {
+    $("#scroll-container").on('scroll', () => {
 		// TODO: Do on screen resize too, and on load
 		Array.from(circleItems).forEach((item) => {
 			const ratio = currentScrollPercentage();
+			console.log(ratio);
 			const { height } = item.getBoundingClientRect();
 			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
 			const topTarget = heightSpace * ratio;

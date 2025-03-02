@@ -15,53 +15,62 @@ import { projects } from '../data/projects';
 const name = "Jack Kraus";
 ---
 
-<main>
-	<div id="background" class="fixed w-screen h-screen -z-10"></div>
-	<Scrollbar/>
+<div id="scroll-container">
+	<main>
+		<Scrollbar/>
 
-	<section id="overview" class="relative">
-		<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
-			<OrbitObject link="#projects" offset={name.length + 5}>Projects</OrbitObject>
-			<OrbitObject link="#skills" offset={name.length + 5}>Skills</OrbitObject>
-			<OrbitObject link="/jackk_resume.pdf" offset={name.length + 5}>
-				Resume<span class="material-symbols-outlined inline">download</span>
-			</OrbitObject>
-		</div>
-		<div class="intro align-middle">
-			<TextAnimate text={name}/>
-			<h2 class="text-gray-400 animated z-10" style={{"animation-delay" : `${(name.length)*100}ms`}}>
-				Software Developer
-			</h2>
-		</div>
-	</section>
+		<section id="overview" class="relative">
+			<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
+				<OrbitObject link="#projects" offset={name.length + 5}>Projects</OrbitObject>
+				<OrbitObject link="#skills" offset={name.length + 5}>Skills</OrbitObject>
+				<OrbitObject link="/jackk_resume.pdf" offset={name.length + 5}>
+					Resume<span class="material-symbols-outlined inline">download</span>
+				</OrbitObject>
+			</div>
+			<div class="intro align-middle">
+				<TextAnimate text={name}/>
+				<h2 class="text-gray-400 animated z-10" style={{"animation-delay" : `${(name.length)*100}ms`}}>
+					Software Developer
+				</h2>
+			</div>
+		</section>
 
-	<section id="projects">
-		<div class="intro align-middle">
-			<TextAnimate text="Projects"/>
-			<div class="grid-container max-w-full max-h-full overflow-y-scroll">
-				<div class="projects-grid object-contain">
-					{projects.map((project, index) => <Project {...project} index={index}/>)}
+		<section id="projects">
+			<div class="intro align-middle">
+				<TextAnimate text="Projects"/>
+				<div class="grid-container max-w-full max-h-full overflow-y-scroll">
+					<div class="projects-grid object-contain">
+						{projects.map((project, index) => <Project {...project} index={index}/>)}
+					</div>
+				</div>
+			</div> 
+		</section>
+		
+		<section id="skills">
+			<div class="intro align-middle">
+				<TextAnimate text="Skills"/>
+				<div>
+					{skills.map(({ category, list }, index) => <div class="flex flex-col align-middle justify-center" id="skillContainer">
+						<h2 class="text-gray-400 animated z-10 text-center m-3" style={{"animation-delay" : `${("Skills".length + index) * 100}ms`}}>{category}</h2>
+						<div class="flex gap-2 flex-wrap justify-center">
+							{list.map((item : any, i) => <Skill text={item.text} index={i} filterable={item.filterable}/>)}
+						</div>
+					</div>)}
 				</div>
 			</div>
-		</div> 
-	</section>
-	
-	<section id="skills">
-		<div class="intro align-middle">
-			<TextAnimate text="Skills"/>
-			{skills.map(({ category, list }, index) => <div class="flex flex-col align-middle justify-center">
-				<h2 class="text-gray-400 animated z-10 text-center" style={{"animation-delay" : `${("Skills".length + index) * 100}ms`}}>{category}</h2>
-				<div class="flex gap-2 flex-wrap justify-center">
-					{list.map((item : any, i) => <Skill text={item.text} index={i} filterable={item.filterable}/>)}
-				</div>
-			</div>)}
-		</div>
-	</section>
-</main>
+		</section>
+	</main>
+</div>
 
 <style>
-	body {
-		background-color: black;
+	#skillContainer {
+		flex-direction: column;
+	}
+
+	#scroll-container {
+		height: 100svh;
+		overflow-y: scroll;
+		scroll-snap-type: y mandatory;
 	}
 
 	.intro {
@@ -76,7 +85,7 @@ const name = "Jack Kraus";
 
 	section {
 		width: 100%;
-		height: 100vh;
+		height: 100svh;
 		scroll-snap-align: center;
 		padding: 40px;
 	}
@@ -100,37 +109,38 @@ const name = "Jack Kraus";
 	}
 
 	.grid-container {
+		--columns: 3;
+		--rows: 2;
 		width: 1100px;
-		aspect-ratio: calc(32 * 3) / calc(19 * 2);
+		aspect-ratio: calc(32 * var(--columns)) / calc(19 * var(--rows));
 	}
 
 	.projects-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(var(--columns), 1fr);
 	}
 	
 	@media only screen and (max-width: 1000px) {
-		.projects-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-
 		.grid-container {
-			aspect-ratio: calc(32 * 2) / calc(19 * 2);
+			--columns: 2;
 		}
 	}
 
 	@media only screen and (max-width: 525px) {
-		.projects-grid {
-			grid-template-columns: repeat(1, 1fr);
-		}
-
 		.grid-container {
-			aspect-ratio: calc(32 * 1) / calc(19 * 2);
+			--columns: 1;
 		}
 	}
 
-	#background {
-		background: radial-gradient(#160f2e 0%, #000000 70%);
+	@media only screen and (max-height: 600px) {
+		.grid-container {
+			--rows: 1;
+		}
+
+		#skillContainer {
+			flex-direction: row;
+			justify-content: space-between;
+		}
 	}
 </style>
 
@@ -165,7 +175,7 @@ const name = "Jack Kraus";
 	}
 
 	h2 {
-		font-size: 2.5rem;
+		font-size: 2rem;
 		font-weight: 300;
 	}
 
@@ -179,17 +189,17 @@ const name = "Jack Kraus";
 		}
 
 		h2 {
-			font-size: 2rem;
+			font-size: 1.5rem;
 		}
 	}
 
-	@media only screen and (max-width: 525px) {
+	@media only screen and ((max-width: 525px) or (max-height: 525px)) {
 		h1 {
 			font-size: 2.5rem;
 		}
 
 		h2 {
-			font-size: 1.25rem;
+			font-size: 1rem;
 		}
 	}
 
@@ -231,7 +241,7 @@ const name = "Jack Kraus";
 
 	resetAnimations();
 
-	window.addEventListener('scroll', () => {
+	$("#scroll-container").on('scroll', () => {
 		resetAnimations();
 	});
 
