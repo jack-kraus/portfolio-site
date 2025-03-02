@@ -13,6 +13,10 @@ const circleLength = 15;
 const circleMaxWidth = 10;
 const circleMinWidth = 5;
 const circleDiff = 30;
+
+// the amount of time for circles to transition between points
+const transMin = 0.14;
+const transMax = 0.35;
 ---
 
 <div class="fixed h-screen top-0 left-0" id="bar-container" class="-z-10">
@@ -24,7 +28,7 @@ const circleDiff = 30;
                 cx={circleMaxWidth / 2 + 2.5}
                 cy={circleDiff * i / circleLength + circleDiff}
                 fill={`white`}
-                style={{"transition-duration": `${0.05 + Math.abs(i) / circleLength * 0.05}s`}}
+                style={{"transition-duration": `${transMin + Math.abs(i) / circleLength * (transMax - transMin)}s`}}
             />;
         })}
     </svg>
@@ -43,16 +47,61 @@ const circleDiff = 30;
 
     const circleItems = document.getElementsByTagName('circle');
 	
-	// animate all circles on scroll
-    $("#scroll-container").on('scroll', () => {
+	function animateCircles(ratio) {
 		// TODO: Do on screen resize too, and on load
 		Array.from(circleItems).forEach((item) => {
-			const ratio = currentScrollPercentage();
 			const height = parseFloat(item.getAttribute("r"));
 			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
 			const topTarget = heightSpace * ratio;
 			item.style.transform = `translate(0px, ${topTarget}px)`;
 		});
+	}
+
+	// on load animate circles
+	$(window).on('load', () => {
+		const ratio = currentScrollPercentage();
+		const roundedTo = Math.round(ratio / 0.5) * 0.5;
+		animateCircles(roundedTo);
+	});
+
+	let lastKnownScrollPosition = 0; // last percentage scrolled
+	let ticking = false;
+	let target = 0; // where we want the circles to go
+
+	// animate all circles on scroll
+    $("#scroll-container").on('scroll', () => {
+		const ratio = currentScrollPercentage(); // current scroll percent
+		const diff = lastKnownScrollPosition - ratio; // difference moved since last event
+		
+		// store current target to know if to update
+		// get ratio rounded to nearest fraction
+		const roundedTo = Math.round(ratio / 0.5) * 0.5;
+		const lastTarget = target;
+
+		// if we're close enough to nearest point, abort
+		if (Math.abs(roundedTo - ratio) < 0.05) {
+			return;
+		}
+		// the target is either above or below at nearest fraction depending on if we're moving up or down
+		else if (diff < 0) {
+			target = Math.ceil(ratio / 0.5) * 0.5;
+		}
+		else if (diff > 0) {
+			target = Math.floor(ratio / 0.5) * 0.5;
+		}
+
+		// prevent throttling
+		if (!ticking) {
+			window.requestAnimationFrame(() => {
+				if (target !== lastTarget) animateCircles(target); // if changed, animate
+				ticking = false;
+			});
+
+			ticking = true;
+		}
+
+		// update last known
+		lastKnownScrollPosition = ratio;
 	});
 </script>
 
