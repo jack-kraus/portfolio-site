@@ -2,17 +2,6 @@
 let { text, offset } = Astro.props;
 offset ??= 0;
 
-const interleave = (arr : any[], item: any) => {
-	const outArray = [];
-	for (let i = 0; i < arr.length; i++) {
-		outArray.push(arr[i]);
-		if (i < arr.length - 1) {
-			outArray.push(item);
-		}
-	}
-	return outArray;
-}
-
 const words = text.split(" ");
 const wordLengths = words.map((item : string) => item.length);
 ---

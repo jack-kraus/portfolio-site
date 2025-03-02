@@ -3,7 +3,7 @@ let { text, index } = Astro.props;
 index ??= 0;
 ---
 
-<div class="p-2 rounded-md text-black skill animated" style={{"animation-delay": `${50 * index}ms`}}>
+<div class="rounded-md text-black skill animated" style={{"animation-delay": `${50 * index}ms`}}>
     <p>{text}</p>
 </div>
 
@@ -41,6 +41,8 @@ index ??= 0;
         position: relative;
         animation: slide 1s ease-out both;
         background-color: #aa60df;
+
+		padding: 0.5rem;
 	}
 
 	.skill:hover {
@@ -92,5 +94,18 @@ index ??= 0;
 
 	.skill:has(~ .skill:hover):not(.skill:has(+ .skill:hover)) {
 		filter: brightness(var(--low-opacity));
+	}
+
+	/* Media */
+	@media only screen and (max-width: 1100px) {
+		.skill {
+			padding: 0.35rem;
+		}
+	}
+
+	@media only screen and (max-width: 525px) {
+		.skill {
+			padding: 0.25rem 0.35rem;
+		}
 	}
 </style>
