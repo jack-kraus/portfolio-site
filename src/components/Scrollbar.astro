@@ -15,7 +15,7 @@ const circleMinWidth = 5;
 const circleDiff = 30;
 ---
 
-<div class="fixed h-screen top-0 left-0" id="scrollContainer" class="-z-10">
+<div class="fixed h-screen top-0 left-0" id="bar-container" class="-z-10">
     <svg width={circleMaxWidth+5} height="100%" class="blur-svg">
         {range(circleLength).map((i) => {
             const circleDimension = (circleMaxWidth - circleMinWidth) * 0.5 * (Math.cos(i * Math.PI / circleLength) + 1) + circleMinWidth;
@@ -55,16 +55,15 @@ const circleDiff = 30;
 </script>
 
 <style>
-    #scrollContainer {
-		padding: 2%;
+    #bar-container {
+		padding: 1.5%;
 		transition: padding 0.1s ease-out;
-		box-sizing: border-box;
 	}
 
 	.blur-svg {
 		filter: brightness(2) contrast(17);
 		background-color: black;
-		margin: 20px;
+		height: 100%;
 	}
 
 	.blur-svg circle {

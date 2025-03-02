@@ -17,6 +17,7 @@ const name = "Jack Kraus";
 
 <div id="scroll-container">
 	<Scrollbar/>
+
 	<main>
 		<section id="overview" class="relative">
 			<div id="orbitParent" class="absolute left-0 top-0 flex justify-center align-middle w-full h-full">
@@ -70,6 +71,9 @@ const name = "Jack Kraus";
 		height: 100svh;
 		overflow-y: scroll;
 		scroll-snap-type: y mandatory;
+		margin: 0;
+		padding: 0;
+		border: 0;
 	}
 
 	.intro {
@@ -206,8 +210,6 @@ const name = "Jack Kraus";
 			font-size: 1rem;
 		}
 	}
-
-	
 </style>
 
 <script>
