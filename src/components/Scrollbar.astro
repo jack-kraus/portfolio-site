@@ -43,16 +43,30 @@ const circleDiff = 30;
 
     const circleItems = document.getElementsByTagName('circle');
 	
-	// animate all circles on scroll
-    $("#scroll-container").on('scroll', () => {
+	function animateCircles(ratio) {
 		// TODO: Do on screen resize too, and on load
 		Array.from(circleItems).forEach((item) => {
-			const ratio = currentScrollPercentage();
 			const height = parseFloat(item.getAttribute("r"));
 			const heightSpace = $(item).parent().height() - height - circleDiff * 2;
 			const topTarget = heightSpace * ratio;
 			item.style.transform = `translate(0px, ${topTarget}px)`;
 		});
+	}
+
+	let lastKnownScrollPosition = 0;
+	let ticking = false;
+	// animate all circles on scroll
+    $("#scroll-container").on('scroll', () => {
+		lastKnownScrollPosition = currentScrollPercentage();
+
+		if (!ticking) {
+			window.requestAnimationFrame(() => {
+				animateCircles(lastKnownScrollPosition);
+				ticking = false;
+			});
+
+			ticking = true;
+		}
 	});
 </script>
 
