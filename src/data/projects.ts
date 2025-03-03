@@ -3,6 +3,7 @@ import miniGolfImage from "../assets/mini_golf.png";
 import harborCurrentsImage from "../assets/harbor_currents.jpg";
 import jobApplicationTrackerImage from "../assets/job_application_tracker.png";
 import tkinterMinesweeperImage from "../assets/tkinter_minesweeper.png";
+import portfolioImage from "../assets/portfolio.png";
 
 interface ProjectPublic {
     title : string,
@@ -54,7 +55,7 @@ export const projects : Project[] = [
     {
         title: "Portfolio Site",
         description: "A portfolio site made in Astro",
-        image: levelerImage.src,
+        image: portfolioImage.src,
         github: "jack-kraus/portfolio-site"
     }
 ];
