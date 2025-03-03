@@ -8,7 +8,7 @@ const delayOffset = 100 * "Projects".length + 100;
 
 <div class="project-item snap-start touchable " data-index={index}>
     <div class="project-card animated bordered" style={{ animationDelay: `${delayOffset + delayStep * index}ms` }}>
-		<div class="front animated bordered bg-cover" style={{ backgroundImage: `url(${image})`, animationDelay: `${delayOffset + delayStep * index}ms` }}>
+		<div class="front animated bordered bg-cover border-white border-2" style={{ backgroundImage: `url(${image})`, animationDelay: `${delayOffset + delayStep * index}ms` }}>
 			<div class="w-full h-full flex flex-col justify-center align-middle">
 				<h3 class="text-white self-start mx-auto">{title}</h3>
 			</div>
