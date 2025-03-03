@@ -51,4 +51,10 @@ export const projects : Project[] = [
         image: tkinterMinesweeperImage.src,
         github: "jack-kraus/Tkinter-Minesweeper"
     },
+    {
+        title: "Portfolio Site",
+        description: "A portfolio site made in Astro",
+        image: levelerImage.src,
+        github: "jack-kraus/portfolio-site"
+    }
 ];
