@@ -1,6 +1,6 @@
 # Jack Kraus' Portfolio Site
 
-A portfolio site made in Astro with various animations and transitions to create an exciting viewing experience.
+A portfolio site made in Astro with various animations and transitions to create an exciting viewing experience. 
 
 [Check it out](https://jackkraus-portfolio.netlify.app/)
 
